@@ -1,0 +1,61 @@
+# name: test/sql/pysal_validation.test
+# description: Argument validation and friendly error messages
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# unknown weights type is rejected at bind
+statement error
+SELECT * FROM pysal.weights_summary((SELECT geom FROM pysal.columbus()), w_type => 'octagon');
+----
+unknown w_type
+
+# unknown transform is rejected
+statement error
+SELECT * FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen', transform => 'zzz');
+----
+unknown transform
+
+# unknown estimator is rejected
+statement error
+SELECT * FROM pysal.spreg((SELECT crime AS target, inc, geom FROM pysal.columbus()), model => 'magic', target => 'target');
+----
+unknown model
+
+# spatial regression requires a target column
+statement error
+SELECT * FROM pysal.spreg((SELECT crime AS target, inc, geom FROM pysal.columbus()), model => 'ols');
+----
+requires 'target'
+
+# target column must exist
+statement error
+SELECT * FROM pysal.spreg((SELECT crime AS target, inc, geom FROM pysal.columbus()), model => 'ols', target => 'missing');
+----
+not found
+
+# predict requires either a name or a BLOB
+statement error
+SELECT * FROM pysal.predict((SELECT id, inc FROM pysal.columbus()));
+----
+either 'model_name'
+
+# predicting with an unknown model name errors
+statement error
+SELECT * FROM pysal.predict((SELECT id, inc, hoval FROM pysal.columbus()), model_name := 'does_not_exist');
+----
+not found
+
+# contiguity weights without a geometry column give a clear error
+statement error
+SELECT * FROM pysal.weights_summary((SELECT crime AS y FROM pysal.columbus()), w_type => 'queen');
+----
+geometry column
+
+statement ok
+DETACH pysal;

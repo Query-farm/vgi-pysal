@@ -1,0 +1,59 @@
+# name: test/sql/pysal_lisa.test
+# description: Local spatial autocorrelation (local_moran / getis_ord_g_local)
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- Local Moran: one row per observation, id carried through ----
+
+query II
+SELECT count(*), count(DISTINCT id)
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'queen', id => 'id');
+----
+49	49
+
+# quadrant codes are always in {1,2,3,4}; cluster labels are a known set
+query I
+SELECT bool_and(quadrant BETWEEN 1 AND 4 AND cluster IN ('HH','LH','LL','HL','ns'))
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'queen', id => 'id');
+----
+true
+
+# columbus crime has significant local clusters/outliers
+query I
+SELECT (count(*) > 0)
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'queen', id => 'id')
+WHERE p_value < 0.05;
+----
+true
+
+# significant non-'ns' labels match the significance filter
+query I
+SELECT bool_and((cluster = 'ns') = (p_value > 0.05))
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'queen', id => 'id', significance => 0.05);
+----
+true
+
+# result joins back to the source by id
+query I
+SELECT count(*)
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'queen', id => 'id') lm
+JOIN pysal.columbus() c USING (id);
+----
+49
+
+# ---- Getis-Ord G* local: hot/cold/ns labels, z-sign agrees with label ----
+
+query I
+SELECT bool_and(hotspot IN ('hot','cold','ns') AND (hotspot != 'hot' OR z_score > 0) AND (hotspot != 'cold' OR z_score < 0))
+FROM pysal.getis_ord_g_local((SELECT id, crime AS y, geom FROM pysal.columbus()), w_type => 'knn', k => 8, id => 'id');
+----
+true
+
+statement ok
+DETACH pysal;

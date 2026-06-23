@@ -1,0 +1,70 @@
+# name: test/sql/pysal_weights.test
+# description: Spatial weights construction (edge list + summary) end-to-end
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- Queen contiguity on columbus polygons ----
+
+# 236 directed neighbour links, no islands
+query II
+SELECT count(*), count(DISTINCT focal)
+FROM pysal.weights((SELECT id, geom FROM pysal.columbus()), w_type => 'queen', id => 'id');
+----
+236	49
+
+# the graph is symmetric: every (a,b) edge has a matching (b,a)
+query I
+SELECT count(*) = 0 FROM (
+  SELECT focal, neighbor FROM pysal.weights((SELECT id, geom FROM pysal.columbus()), w_type => 'queen', id => 'id') a
+  EXCEPT
+  SELECT neighbor AS focal, focal AS neighbor
+  FROM pysal.weights((SELECT id, geom FROM pysal.columbus()), w_type => 'queen', id => 'id') b
+);
+----
+true
+
+# ---- weights_summary: structural diagnostics ----
+
+query IIII
+SELECT n, n_islands, min_neighbors, max_neighbors
+FROM pysal.weights_summary((SELECT geom FROM pysal.columbus()), w_type => 'queen');
+----
+49	0	2	10
+
+# row-standardised weights sum to ~1.0 per focal observation
+query I
+SELECT bool_and(abs(s - 1.0) < 1e-9) FROM (
+  SELECT focal, sum(weight) AS s
+  FROM pysal.weights((SELECT id, geom FROM pysal.columbus()), w_type => 'queen', id => 'id', transform => 'r')
+  GROUP BY focal);
+----
+true
+
+# ---- KNN from coordinate columns: every node has exactly k neighbours ----
+
+query II
+SELECT max_neighbors, min_neighbors
+FROM pysal.weights_summary((SELECT x, y FROM pysal.columbus()), w_type => 'knn', k => 5, transform => 'b');
+----
+5	5
+
+# ---- distance band and kernel build without error ----
+
+query I
+SELECT n FROM pysal.weights_summary((SELECT x, y FROM pysal.columbus()), w_type => 'distance_band');
+----
+49
+
+query I
+SELECT n FROM pysal.weights_summary((SELECT x, y FROM pysal.columbus()), w_type => 'kernel', k => 6);
+----
+49
+
+statement ok
+DETACH pysal;

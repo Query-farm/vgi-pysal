@@ -1,0 +1,62 @@
+# name: test/sql/pysal_classify.test
+# description: Choropleth classification schemes (mapclassify)
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- Quantiles: k balanced classes, id carried through ----
+
+query II
+SELECT count(*), count(DISTINCT class)
+FROM pysal.quantiles((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5);
+----
+49	5
+
+# every class is in [0, k); classes are roughly equal-count (9 or 10 each)
+query I
+SELECT bool_and(class BETWEEN 0 AND 4 AND cnt BETWEEN 9 AND 10) FROM (
+  SELECT class, count(*) AS cnt
+  FROM pysal.quantiles((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5)
+  GROUP BY class);
+----
+true
+
+# class assignment respects the bound: each row's value is <= its class upper bound
+query I
+SELECT bool_and(y <= upper_bound)
+FROM pysal.quantiles((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5, id => 'id') q
+JOIN (SELECT id, crime AS y FROM pysal.columbus()) src USING (id);
+----
+true
+
+# ---- Equal interval: equal-width bins ----
+
+query I
+SELECT count(DISTINCT class) <= 5
+FROM pysal.equal_interval((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5);
+----
+true
+
+# ---- Natural breaks and Fisher-Jenks produce k classes ----
+
+query I
+SELECT count(DISTINCT class)
+FROM pysal.natural_breaks((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 4);
+----
+4
+
+# ---- StdMean ignores k (data-driven class count) and still classifies all rows ----
+
+query I
+SELECT count(*)
+FROM pysal.std_mean((SELECT id, crime AS y FROM pysal.columbus()), value => 'y');
+----
+49
+
+statement ok
+DETACH pysal;

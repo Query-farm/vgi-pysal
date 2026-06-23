@@ -1,0 +1,109 @@
+[project]
+name = "vgi-pysal"
+version = "0.1.0"
+description = "A VGI (Vector Gateway Interface) worker exposing PySAL spatial datasets, weights, autocorrelation, classification, and spatial regression to DuckDB/SQL"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Rusty Conover", email = "rusty@query.farm" }]
+maintainers = [{ name = "Query Farm LLC", email = "hello@query.farm" }]
+keywords = ["vgi", "duckdb", "arrow", "pysal", "spatial-analysis", "gis", "sql"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Database :: Database Engines/Servers",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.13"
+dependencies = [
+    "vgi-python[http]>=0.8.1",
+    "libpysal>=4.12",
+    "esda>=2.5",
+    "spreg>=1.6",
+    "mapclassify>=2.6",
+    "inequality>=1.0",
+    "shapely>=2.0",
+    "geopandas>=1.0",
+    "numpy",
+]
+
+# Console scripts. `vgi-pysal` runs the stdio transport (DuckDB spawns it);
+# `vgi-pysal-http` runs the HTTP server. Once installed you can launch either
+# directly, e.g. `uvx vgi-pysal`.
+[project.scripts]
+vgi-pysal = "vgi_pysal.worker:main"
+vgi-pysal-http = "vgi_pysal.worker:main_http"
+
+[project.urls]
+Homepage = "https://query.farm"
+Repository = "https://github.com/Query-farm/vgi-pysal"
+Issues = "https://github.com/Query-farm/vgi-pysal/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# The installable worker is the `vgi_pysal` package (entry points live in
+# vgi_pysal.worker). The repo-root pysal_worker.py / serve.py are dev/Fly shims
+# and intentionally not shipped in the wheel.
+[tool.hatch.build.targets.wheel]
+packages = ["vgi_pysal"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "vgi_pysal/",
+    "pysal_worker.py",
+    "serve.py",
+    "conftest.py",
+    "tests/",
+    "test/",
+    "ci/",
+    "README.md",
+    "CLAUDE.md",
+    "LICENSE",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pyarrow",
+    "ruff",
+    "pydoclint",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E741",  # ambiguous variable name (x, y are conventional for coordinates)
+    "B008",  # function call in argument default (Arg(...) defaults are intentional)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# tests: E402 (sys.path shim before imports), C408 (dict(...) kwargs read clearly in fixtures)
+"tests/*" = ["E402", "C408"]
+
+[tool.pydoclint]
+# Docstring consistency gate (complements ruff's `D` rules). Mirrors the
+# vgi-python settings. Run via `uv run pydoclint vgi_pysal/ pysal_worker.py
+# serve.py`; also enforced inside the pytest suite by tests/test_docstrings.py.
+style = "google"
+arg_type_hints_in_docstring = false
+check_return_types = false
+check_yield_types = false
+check_class_attributes = true
+skip_checking_raises = true
+allow_init_docstring = true

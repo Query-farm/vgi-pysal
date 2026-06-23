@@ -1,0 +1,67 @@
+# name: test/sql/pysal_esda.test
+# description: Global spatial autocorrelation (Moran/Geary/Getis-Ord G)
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- Moran's I on columbus crime (queen weights) ----
+
+# exactly one row out
+query I
+SELECT count(*) FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
+----
+1
+
+# I ~ 0.50, significantly positive
+query II
+SELECT round(statistic, 4), (p_value < 0.05)
+FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
+----
+0.5002	true
+
+# Moran's I expectation is -1/(n-1)
+query I
+SELECT abs(expected - (-1.0 / (49 - 1))) < 1e-9
+FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
+----
+true
+
+# ---- Geary's C: ~0.54, expectation 1.0 ----
+
+query II
+SELECT round(statistic, 4), round(expected, 4)
+FROM pysal.geary((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
+----
+0.5405	1.0
+
+# ---- Getis-Ord General G: positive, significant high-value concentration ----
+
+query I
+SELECT (statistic > 0 AND p_value < 0.05)
+FROM pysal.getis_ord_g((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'knn', k => 8);
+----
+true
+
+# ---- Distance-based Moran on baltim point prices ----
+
+query I
+SELECT (statistic > 0 AND p_value < 0.05)
+FROM pysal.moran((SELECT price AS value, x, y FROM pysal.baltim()), value => 'value', w_type => 'knn', k => 5);
+----
+true
+
+# permutation p-values are reproducible across runs (fixed seed)
+query I
+SELECT a.p_value = b.p_value FROM
+  pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen', seed => 7) a,
+  pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen', seed => 7) b;
+----
+true
+
+statement ok
+DETACH pysal;

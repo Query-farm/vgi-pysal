@@ -1,0 +1,54 @@
+# name: test/sql/pysal_inequality.test
+# description: Inequality aggregates (Gini, Theil), including GROUP BY
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- Gini and Theil are in valid ranges over Mexican state GDP ----
+
+query II
+SELECT (pysal.gini(pcgdp2000) BETWEEN 0 AND 1), (pysal.theil(pcgdp2000) >= 0)
+FROM pysal.mexico();
+----
+true	true
+
+# Gini of a perfectly equal distribution is 0
+query I
+SELECT abs(pysal.gini(v)) < 1e-9 FROM (SELECT unnest([5.0, 5.0, 5.0, 5.0, 5.0]) AS v);
+----
+true
+
+# Theil of a perfectly equal distribution is 0
+query I
+SELECT abs(pysal.theil(v)) < 1e-9 FROM (SELECT unnest([3.0, 3.0, 3.0, 3.0]) AS v);
+----
+true
+
+# inequality rises over time (1940 was more unequal than 2000 in this dataset)
+query I
+SELECT pysal.gini(pcgdp1940) > pysal.gini(pcgdp2000) FROM pysal.mexico();
+----
+true
+
+# ---- composes with GROUP BY ----
+
+query I
+SELECT count(*) FROM (
+  SELECT (id < 16) AS half, pysal.gini(crime) AS g
+  FROM pysal.columbus() GROUP BY half);
+----
+2
+
+# NULLs are skipped; a single non-null value yields NULL (need >= 2)
+query I
+SELECT pysal.gini(v) IS NULL FROM (SELECT unnest([10.0]) AS v);
+----
+true
+
+statement ok
+DETACH pysal;

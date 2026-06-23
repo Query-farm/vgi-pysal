@@ -1,0 +1,71 @@
+# name: test/sql/pysal_datasets.test
+# description: Built-in libpysal example datasets as table functions
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- columbus: 49 polygons, has an id and a WKB geom column ----
+
+query I
+SELECT count(*) FROM pysal.columbus();
+----
+49
+
+# id is 0-based and dense
+query II
+SELECT min(id), max(id) FROM pysal.columbus();
+----
+0	48
+
+# geom is non-NULL WKB bytes on every row
+query I
+SELECT bool_and(geom IS NOT NULL AND octet_length(geom) > 0) FROM pysal.columbus();
+----
+true
+
+# attribute columns are present and snake-cased
+query I
+SELECT count(*) FROM (DESCRIBE SELECT * FROM pysal.columbus()) WHERE column_name IN ('crime', 'inc', 'hoval', 'geom', 'id');
+----
+5
+
+# ---- the other datasets load with their expected row counts ----
+
+query I
+SELECT count(*) FROM pysal.baltim();
+----
+211
+
+query I
+SELECT count(*) FROM pysal.sids();
+----
+100
+
+query I
+SELECT count(*) FROM pysal.us_states();
+----
+48
+
+query I
+SELECT count(*) FROM pysal.mexico();
+----
+32
+
+query I
+SELECT count(*) FROM pysal.georgia();
+----
+159
+
+# projection pushdown: selecting one column still returns all rows
+query I
+SELECT count(crime) FROM pysal.columbus();
+----
+49
+
+statement ok
+DETACH pysal;

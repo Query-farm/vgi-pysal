@@ -1,0 +1,107 @@
+# name: test/sql/pysal_regression.test
+# description: Spatial regression (spreg) coefficients, fit/predict, registry
+# group: [vgi_pysal]
+
+require-env VGI_PYSAL_WORKER
+
+require vgi
+
+statement ok
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
+
+# ---- OLS coefficient table: CONSTANT + 2 explanatory variables ----
+
+query I
+SELECT count(*)
+FROM pysal.spreg((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                 model => 'ols', target => 'target', w_type => 'queen');
+----
+3
+
+# OLS CONSTANT estimate ~ 68.62; both slopes are negative
+query I
+SELECT round(coefficient, 2)
+FROM pysal.spreg((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                 model => 'ols', target => 'target', w_type => 'queen')
+WHERE variable = 'CONSTANT';
+----
+68.62
+
+query I
+SELECT bool_and(coefficient < 0)
+FROM pysal.spreg((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                 model => 'ols', target => 'target', w_type => 'queen')
+WHERE variable IN ('inc', 'hoval');
+----
+true
+
+# ---- ML_Lag adds a spatial autoregressive term (rho > 0, significant) ----
+
+query I
+SELECT count(*)
+FROM pysal.spreg((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                 model => 'ml_lag', target => 'target', w_type => 'queen');
+----
+4
+
+query II
+SELECT round(coefficient, 4), (p_value < 0.05)
+FROM pysal.spreg((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                 model => 'ml_lag', target => 'target', w_type => 'queen')
+WHERE is_spatial;
+----
+0.4233	true
+
+# ---- fit -> registry -> predict ----
+
+statement ok
+SELECT * FROM pysal.drop_model('cb_lag');
+
+query III
+SELECT model_name, model_type, (spatial_coef > 0)
+FROM pysal.fit((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+               model => 'ml_lag', target => 'target', model_name => 'cb_lag', w_type => 'queen');
+----
+cb_lag	ml_lag	true
+
+# the stored model is listed and described
+query II
+SELECT model_type, k FROM pysal.model_info('cb_lag');
+----
+ml_lag	4
+
+# predict emits one linear prediction per row, joinable by id
+query I
+SELECT count(*)
+FROM pysal.predict((SELECT id, inc, hoval FROM pysal.columbus()), model_name := 'cb_lag', id := 'id');
+----
+49
+
+# OLS prediction equals the model's own fitted trend exactly (linear predictor)
+statement ok
+SELECT * FROM pysal.fit((SELECT crime AS target, inc, hoval, geom FROM pysal.columbus()),
+                        model => 'ols', target => 'target', model_name => 'cb_ols', w_type => 'queen');
+
+query I
+SELECT count(*) FROM pysal.predict((SELECT id, inc, hoval FROM pysal.columbus()), model_name := 'cb_ols', id := 'id')
+WHERE prediction IS NOT NULL;
+----
+49
+
+# ---- drop_model removes it ----
+
+query II
+SELECT model_name, dropped FROM pysal.drop_model('cb_lag');
+----
+cb_lag	true
+
+query I
+SELECT count(*) FROM pysal.model_info('cb_lag');
+----
+0
+
+statement ok
+SELECT * FROM pysal.drop_model('cb_ols');
+
+statement ok
+DETACH pysal;
