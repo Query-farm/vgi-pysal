@@ -206,17 +206,44 @@ make test-http                       # SQL tests against a local HTTP server
 - `make test-stdio` / `test-http` point `PYSAL_MODELS_DIR` at an isolated
   `.test-models/` so the registry tests don't pollute `./models`.
 
-## Deployment (Fly.io)
+## Container image & CI/CD (modelled on vgi-scikit-learn)
+
+Three workflows, modelled on the sibling sklearn worker:
+
+- **`ci.yml`** — `static` (ruff + mypy + pydoclint), `unit` (pytest on
+  Linux/macOS/Windows), and `integration` (the SQL suite via `haybarn-unittest` +
+  the signed community `vgi` extension). Reusable via `workflow_call`.
+- **`publish.yml`** — on a GitHub Release, runs `ci.yml`, verifies the tag matches
+  the package version (`ci/check-version.sh`), then `uv build && uv publish` to PyPI.
+- **`docker-publish.yml`** — on a `vX.Y.Z` tag or push to `main`, builds the
+  multi-arch image on native amd64/arm64 runners, **tests the built image in BOTH
+  transports before pushing** (amd64 runs the full SQL suite over stdio *and*
+  HTTP; arm64 — no haybarn asset — runs an import + `/health` smoke), pushes by
+  digest, then merges into one cosign-signed manifest on ghcr.io.
+
+The single image (`Dockerfile` + `docker-entrypoint.sh`) serves both transports:
+`docker run … IMG` → HTTP server; `docker run -i … IMG stdio` → the stdio worker
+DuckDB spawns. It installs `pip install '.[serve]'` (the `serve` extra adds
+oauth/sentry/authlib for the HTTP server only); geopandas/shapely ship manylinux
+wheels so there's no system GEOS/GDAL to build. The `farm.query.vgi.volumes` image
+label tells the extension to mount `/data` (registry + WAL-SQLite state). **Do not
+import `vgi` in a build-time `RUN`**: importing it opens `VGI_WORKER_SQLITE_PATH`
+(`/data/state/...`), which doesn't exist until the entrypoint or the later `mkdir`
+creates it — a build-time warm-up step failed exactly this way.
+
+Version is single-sourced from `vgi_pysal/__init__.py` (`dynamic = ["version"]`
+via `[tool.hatch.version]`); `ci/check-version.sh` gates releases/tags against it.
 
 ```sh
-make deploy        # build (linux/amd64) -> smoke-test -> push -> fly deploy
+make image                       # build the image locally
+make test-docker-stdio           # SQL suite vs the image, stdio transport
+make test-docker-http            # SQL suite vs the image, HTTP transport
+make deploy TAG=0.1.0            # fly deploy the published ghcr image
 fly volumes create pysal_models --size 1 --region iad   # one-time, registry
 ```
 
 `fly.toml` bumps VM memory to 1 GB (geopandas/scipy are heavy) and mounts a volume
-at `/data` for the model registry (`PYSAL_MODELS_DIR=/data/models`). The Dockerfile
-installs everything from PyPI (geopandas/shapely ship manylinux wheels, so no
-system GEOS/GDAL) and warms the bundled example datasets at build time.
+at `/data` for the model registry + framework state.
 
 ## Model registry
 

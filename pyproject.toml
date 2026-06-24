@@ -1,6 +1,6 @@
 [project]
 name = "vgi-pysal"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A VGI (Vector Gateway Interface) worker exposing PySAL spatial datasets, weights, autocorrelation, classification, and spatial regression to DuckDB/SQL"
 readme = "README.md"
 license = "MIT"
@@ -33,6 +33,17 @@ dependencies = [
     "numpy",
 ]
 
+[project.optional-dependencies]
+# HTTP-serving extras. OAuth auth and Sentry telemetry only apply to the HTTP
+# server (under stdio, DuckDB owns the pipe), so they live here rather than in
+# the base deps: the published Docker image installs `.[serve]`, while a plain
+# `pip install vgi-pysal` for an on-host stdio worker stays lean.
+serve = [
+    "vgi-python[http,oauth]>=0.8.1",
+    "vgi-rpc[sentry]",
+    "authlib",
+]
+
 # Console scripts. `vgi-pysal` runs the stdio transport (DuckDB spawns it);
 # `vgi-pysal-http` runs the HTTP server. Once installed you can launch either
 # directly, e.g. `uvx vgi-pysal`.
@@ -49,6 +60,12 @@ Issues = "https://github.com/Query-farm/vgi-pysal/issues"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+# Single source of truth for the version: vgi_pysal/__init__.py. ci/check-version.sh
+# verifies a release tag matches it, so the wheel, the advertised VGI
+# implementation_version, and the container image all equal the release.
+[tool.hatch.version]
+path = "vgi_pysal/__init__.py"
+
 # The installable worker is the `vgi_pysal` package (entry points live in
 # vgi_pysal.worker). The repo-root pysal_worker.py / serve.py are dev/Fly shims
 # and intentionally not shipped in the wheel.
@@ -64,6 +81,9 @@ include = [
     "tests/",
     "test/",
     "ci/",
+    "Dockerfile",
+    "docker-entrypoint.sh",
+    ".dockerignore",
     "README.md",
     "CLAUDE.md",
     "LICENSE",

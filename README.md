@@ -230,23 +230,38 @@ ATTACH 'pysal' (TYPE vgi, LOCATION 'vgi-pysal');
 
 ```sh
 make venv        # venv against the local ~/Development/vgi-{python,rpc} checkouts
-make pytest      # unit tests (compute logic + schemas + registry)
+make check       # ruff lint + format, strict mypy, pydoclint, and pytest
 make test-stdio  # SQL tests with the worker as a subprocess (authoritative)
 make test-http   # SQL tests against a local HTTP server
 ```
 
-Run the worker straight from a checkout with `uv run pysal_worker.py`. Lint and
-format with `uvx ruff check .` / `uvx ruff format .`.
+Run the worker straight from a checkout with `uv run pysal_worker.py`. The static
+gates (`make lint` / `make typecheck`) and tooling config (ruff with the `D`
+docstring rules, strict mypy, pydoclint) mirror the `vgi-python` repo.
 
-## Deployment (Fly.io)
+## Container image & deployment
+
+One image serves both transports — `docker run … IMG` (HTTP) and
+`docker run -i … IMG stdio` (the worker DuckDB spawns):
 
 ```sh
-make deploy   # build (linux/amd64) -> smoke-test -> push -> fly deploy
+make image              # build locally
+make test-docker-http   # run the SQL suite against the image over HTTP
+make test-docker-stdio  # …and over stdio
+```
+
+CI (`docker-publish.yml`) builds the multi-arch image on native runners, tests it
+in both transports, and pushes a cosign-signed manifest to
+`ghcr.io/query-farm/vgi-pysal` on each `vX.Y.Z` tag (and `:edge` on `main`).
+Deploy the published image to Fly.io:
+
+```sh
+make deploy TAG=0.1.0   # fly deploy the ghcr image
 fly volumes create pysal_models --size 1 --region iad   # one-time, model registry
 ```
 
 `fly.toml` sets the VM to 1 GB (geopandas/scipy are heavy) and mounts a volume at
-`/data` for the registry (`PYSAL_MODELS_DIR=/data/models`).
+`/data` for the registry + framework state.
 
 ## Layout
 
