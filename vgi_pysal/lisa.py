@@ -24,8 +24,9 @@ import pyarrow as pa
 from vgi.arguments import Arg
 from vgi.invocation import BindResponse
 from vgi.metadata import FunctionExample
-from vgi.table_buffering_function import OutputCollector, TableBufferingParams
+from vgi.table_buffering_function import TableBufferingParams
 from vgi.table_function import BindParams
+from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of, numeric_column
 from .schema_utils import field as sfield
@@ -37,6 +38,8 @@ _QUADRANT = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
 
 @dataclass(slots=True, frozen=True)
 class LocalEsdaArgs(WeightsArgs):
+    """Arguments shared by the per-observation local autocorrelation functions."""
+
     value: Annotated[str, Arg("value", default="y", doc="Numeric column to analyse for local autocorrelation.")]
     id: Annotated[str, Arg("id", default="", doc="Optional id column to carry through to the output.")]
     permutations: Annotated[int, Arg("permutations", default=999, doc="Conditional permutations for inference.")]
@@ -48,22 +51,27 @@ class LocalEsdaArgs(WeightsArgs):
 
 @dataclass(slots=True, frozen=True)
 class GLocalArgs(LocalEsdaArgs):
+    """Arguments for the local Getis-Ord G function, adding the G_i* toggle."""
+
     star: Annotated[bool, Arg("star", default=True, doc="Use G_i* (include the focal observation) rather than G_i.")]
 
 
-class _LocalStat[TArgs](SinkBuffer[TArgs, DrainState]):
+class _LocalStat[TArgs: LocalEsdaArgs](SinkBuffer[TArgs, DrainState]):
     """Base: buffer input, build W, compute a per-observation statistic, stream rows."""
 
     @classmethod
     def output_fields(cls) -> list[pa.Field]:
+        """Return the statistic-specific output fields (excluding the carried id column)."""
         raise NotImplementedError
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, args: Any) -> dict[str, list[Any]]:
+        """Compute the per-observation statistic columns from values and weights."""
         raise NotImplementedError
 
     @classmethod
     def _schema(cls, input_schema: pa.Schema, id_col: str) -> pa.Schema:
+        """Build the output schema, prepending the optional id column."""
         fields: list[pa.Field] = []
         if id_col and id_col in input_schema.names:
             fields.append(input_schema.field(id_col))
@@ -72,12 +80,14 @@ class _LocalStat[TArgs](SinkBuffer[TArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[TArgs]) -> BindResponse:
+        """Validate the weights arguments and resolve the output schema."""
         validate_weights_args(params.args)
         assert params.bind_call.input_schema is not None
         return BindResponse(output_schema=cls._schema(params.bind_call.input_schema, params.args.id))
 
     @classmethod
     def initial_finalize_state(cls, finalize_state_id: bytes, params: TableBufferingParams[TArgs]) -> DrainState:
+        """Create the per-finalize-stream emit-once cursor."""
         return DrainState()
 
     @classmethod
@@ -88,6 +98,7 @@ class _LocalStat[TArgs](SinkBuffer[TArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Build weights from the buffered table, compute the statistic, and emit the result rows."""
         if state.done:
             out.finish()
             return
@@ -115,6 +126,8 @@ class LocalMoranFn(_LocalStat[LocalEsdaArgs]):
     FunctionArguments: ClassVar[type] = LocalEsdaArgs
 
     class Meta:
+        """Catalog metadata for the local_moran function."""
+
         name = "local_moran"
         description = "Local Moran's I (LISA): per-observation spatial clusters and outliers"
         categories = ["esda", "lisa", "autocorrelation", "spatial"]
@@ -131,6 +144,7 @@ class LocalMoranFn(_LocalStat[LocalEsdaArgs]):
 
     @classmethod
     def output_fields(cls) -> list[pa.Field]:
+        """Return the Local Moran output fields (statistic, scores, quadrant, cluster label)."""
         return [
             sfield("local_i", pa.float64(), "Local Moran's I_i statistic.", nullable=False),
             sfield("z_score", pa.float64(), "Standardised score (permutation-based)."),
@@ -146,6 +160,7 @@ class LocalMoranFn(_LocalStat[LocalEsdaArgs]):
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, args: Any) -> dict[str, list[Any]]:
+        """Run Local Moran's I and derive HH/LL/HL/LH cluster labels at the significance cutoff."""
         lm = esda.Moran_Local(y, w, permutations=args.permutations, seed=args.seed)
         p = lm.p_sim
         labels = [_QUADRANT[int(q)] if pv <= args.significance else "ns" for q, pv in zip(lm.q, p, strict=True)]
@@ -164,6 +179,8 @@ class GetisOrdGLocalFn(_LocalStat[GLocalArgs]):
     FunctionArguments: ClassVar[type] = GLocalArgs
 
     class Meta:
+        """Catalog metadata for the getis_ord_g_local function."""
+
         name = "getis_ord_g_local"
         description = "Local Getis-Ord G_i/G_i* hot-spot and cold-spot analysis"
         categories = ["esda", "lisa", "autocorrelation", "spatial"]
@@ -179,6 +196,7 @@ class GetisOrdGLocalFn(_LocalStat[GLocalArgs]):
 
     @classmethod
     def output_fields(cls) -> list[pa.Field]:
+        """Return the Getis-Ord output fields (statistic, z-score, p-value, hot/cold label)."""
         return [
             sfield("g_local", pa.float64(), "Local G_i (or G_i*) statistic.", nullable=False),
             sfield(
@@ -195,6 +213,7 @@ class GetisOrdGLocalFn(_LocalStat[GLocalArgs]):
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, args: Any) -> dict[str, list[Any]]:
+        """Run local Getis-Ord G_i/G_i* and label significant hot and cold spots by z-score sign."""
         # Getis-Ord uses binary / distance weights, not row-standardised.
         if w.transform == "R":
             w.transform = "B"

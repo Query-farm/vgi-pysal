@@ -33,7 +33,7 @@ import spreg
 from vgi.arguments import Arg, TableInput
 from vgi.invocation import BindResponse
 from vgi.metadata import FunctionExample
-from vgi.table_buffering_function import OutputCollector, TableBufferingParams
+from vgi.table_buffering_function import TableBufferingParams
 from vgi.table_function import (
     BindParams,
     ProcessParams,
@@ -42,8 +42,8 @@ from vgi.table_function import (
     bind_fixed_schema,
     init_single_worker,
 )
-from vgi.table_in_out_function import OutputCollector as InOutCollector
 from vgi.table_in_out_function import TableInOutGenerator
+from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of, matrix, numeric_column
 from .registry import (
@@ -69,6 +69,7 @@ _MODELS: dict[str, type] = {
 
 
 def normalise_model(model: str) -> str:
+    """Normalise an estimator name to its canonical key, raising for unknown models."""
     m = (model or "").strip().lower()
     if m not in _MODELS:
         raise ValueError(f"unknown model {model!r}; choose one of: {', '.join(sorted(_MODELS))}")
@@ -76,6 +77,7 @@ def normalise_model(model: str) -> str:
 
 
 def _is_spatial_name(name: str) -> bool:
+    """Return whether a parameter name denotes a spatial autoregressive term (rho / lambda)."""
     return name.startswith("W_") or name in ("lambda", "rho")
 
 
@@ -197,12 +199,15 @@ def _to_model(fitted: _Fitted, model_obj: Any, name: str) -> SpatialModel:
 
 @dataclass(slots=True, frozen=True)
 class RegArgs(WeightsArgs):
+    """Arguments shared by the spatial-regression table functions."""
+
     model: Annotated[str, Arg("model", default="ols", doc="Estimator: ols, ml_lag, ml_error, or gm_lag.")]
     target: Annotated[str, Arg("target", default="", doc="Dependent-variable column name (required).")]
     id: Annotated[str, Arg("id", default="", doc="Optional id column excluded from the explanatory variables.")]
 
 
 def _validate_reg_bind(params: BindParams[Any]) -> None:
+    """Validate the model, weights, and target arguments against the input schema at bind time."""
     a = params.args
     normalise_model(a.model)
     validate_weights_args(a)
@@ -242,6 +247,8 @@ class SpregFn(SinkBuffer[RegArgs, DrainState]):
     FunctionArguments: ClassVar[type] = RegArgs
 
     class Meta:
+        """Catalog metadata for the spreg function."""
+
         name = "spreg"
         description = "Fit a spatial regression (OLS/ML_Lag/ML_Error/GM_Lag) and return the coefficient table"
         categories = ["regression", "spreg", "spatial"]
@@ -258,11 +265,13 @@ class SpregFn(SinkBuffer[RegArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[RegArgs]) -> BindResponse:
+        """Validate the regression arguments and return the coefficient-table output schema."""
         _validate_reg_bind(params)
         return BindResponse(output_schema=_COEF_SCHEMA)
 
     @classmethod
     def initial_finalize_state(cls, finalize_state_id: bytes, params: TableBufferingParams[RegArgs]) -> DrainState:
+        """Create the initial finalize-time drain state."""
         return DrainState()
 
     @classmethod
@@ -273,6 +282,7 @@ class SpregFn(SinkBuffer[RegArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Fit the model on the buffered rows and emit one coefficient row per parameter."""
         if state.done:
             out.finish()
             return
@@ -309,6 +319,8 @@ class SpregFn(SinkBuffer[RegArgs, DrainState]):
 
 @dataclass(slots=True, frozen=True)
 class FitArgs(RegArgs):
+    """Arguments for the fit function, adding the optional registry name."""
+
     model_name: Annotated[str, Arg("model_name", default="", doc="Name to store the fitted model under (optional).")]
 
 
@@ -336,6 +348,8 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
     FunctionArguments: ClassVar[type] = FitArgs
 
     class Meta:
+        """Catalog metadata for the fit function."""
+
         name = "fit"
         description = "Fit a spatial regression model, store it in the registry, and return a summary + model BLOB"
         categories = ["regression", "spreg", "models"]
@@ -352,6 +366,7 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[FitArgs]) -> BindResponse:
+        """Validate the model name and regression arguments and return the fit-summary output schema."""
         if params.args.model_name:
             validate_name(params.args.model_name)
         _validate_reg_bind(params)
@@ -359,6 +374,7 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
 
     @classmethod
     def initial_finalize_state(cls, finalize_state_id: bytes, params: TableBufferingParams[FitArgs]) -> DrainState:
+        """Create the initial finalize-time drain state."""
         return DrainState()
 
     @classmethod
@@ -369,6 +385,7 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Fit and normalise the model, persist it when named, and emit a one-row summary plus a model BLOB."""
         if state.done:
             out.finish()
             return
@@ -437,6 +454,8 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
 
 @dataclass(slots=True, frozen=True)
 class PredictArgs:
+    """Arguments for the predict function."""
+
     data: Annotated[TableInput, Arg(0, doc="Table to score (must contain the model's explanatory columns).")]
     model_name: Annotated[
         str, Arg("model_name", default="", doc="Name of a model in the registry. Provide this OR model.")
@@ -456,6 +475,8 @@ class PredictModel(TableInOutGenerator[PredictArgs]):
     FunctionArguments: ClassVar[type] = PredictArgs
 
     class Meta:
+        """Catalog metadata for the predict function."""
+
         name = "predict"
         description = "Predict with a stored spatial-regression model (linear/systematic predictor)"
         categories = ["regression", "spreg", "inference"]
@@ -471,6 +492,7 @@ class PredictModel(TableInOutGenerator[PredictArgs]):
 
     @classmethod
     def on_bind(cls, params: BindParams[PredictArgs]) -> BindResponse:
+        """Load the model, check its explanatory columns exist in the input, and build the prediction schema."""
         a = params.args
         if not a.model_name and not a.model:
             raise ValueError("predict requires either 'model_name' (a registry name) or 'model' (a model BLOB)")
@@ -491,6 +513,7 @@ class PredictModel(TableInOutGenerator[PredictArgs]):
 
     @classmethod
     def _load(cls, args: PredictArgs) -> SpatialModel:
+        """Load the model from the registry by name or unpack it from the supplied BLOB."""
         if args.model_name:
             try:
                 return get_store().load(args.model_name)
@@ -500,6 +523,8 @@ class PredictModel(TableInOutGenerator[PredictArgs]):
 
     @classmethod
     def _cached(cls, params: ProcessParams[PredictArgs]) -> SpatialModel:
+        """Return the model for this execution, loading and caching it on first use."""
+        assert params.init_response is not None
         key = params.init_response.execution_id
         model = _PREDICT_CACHE.get(key)
         if model is None:
@@ -513,8 +538,9 @@ class PredictModel(TableInOutGenerator[PredictArgs]):
         params: ProcessParams[PredictArgs],
         state: None,
         batch: pa.RecordBatch,
-        out: InOutCollector,
+        out: OutputCollector,
     ) -> None:
+        """Compute the linear predictor for each row in the batch and emit predictions."""
         a = params.args
         model = cls._cached(params)
         table = pa.Table.from_batches([batch])
@@ -553,6 +579,7 @@ _MODEL_INFO_SCHEMA = pa.schema(
 
 
 def _model_rows(models: list[SpatialModel]) -> dict[str, list[Any]]:
+    """Project a list of stored models into the column-wise dict for the model-info schema."""
     return {
         "model_name": [m.name for m in models],
         "model_type": [m.model_type for m in models],
@@ -573,9 +600,13 @@ def _model_rows(models: list[SpatialModel]) -> dict[str, list[Any]]:
 @init_single_worker
 @bind_fixed_schema
 class ListModels(TableFunctionGenerator[NoArgs]):
+    """List every spatial-regression model stored in the registry."""
+
     FIXED_SCHEMA: ClassVar[pa.Schema] = _MODEL_INFO_SCHEMA
 
     class Meta:
+        """Catalog metadata for the list_models function."""
+
         name = "list_models"
         description = "List all spatial-regression models in the registry"
         categories = ["regression", "registry"]
@@ -583,25 +614,33 @@ class ListModels(TableFunctionGenerator[NoArgs]):
 
     @classmethod
     def cardinality(cls, params: BindParams[NoArgs]) -> TableCardinality:
+        """Return the estimated and maximum row counts for the registry listing."""
         return TableCardinality(estimate=10, max=10000)
 
     @classmethod
     def process(cls, params: ProcessParams[NoArgs], state: None, out: Any) -> None:
+        """Emit one row per stored model and finish."""
         out.emit(pa.RecordBatch.from_pydict(_model_rows(get_store().list()), schema=params.output_schema))
         out.finish()
 
 
 @dataclass(slots=True, frozen=True)
 class ModelInfoArgs:
+    """Arguments for the model_info function."""
+
     model_name: Annotated[str, Arg(0, doc="Name of a stored model.")]
 
 
 @init_single_worker
 @bind_fixed_schema
 class ModelInfo(TableFunctionGenerator[ModelInfoArgs]):
+    """Describe a single stored model, returning one row or none if it is absent."""
+
     FIXED_SCHEMA: ClassVar[pa.Schema] = _MODEL_INFO_SCHEMA
 
     class Meta:
+        """Catalog metadata for the model_info function."""
+
         name = "model_info"
         description = "Describe a single stored model (one row, empty if absent)"
         categories = ["regression", "registry"]
@@ -613,10 +652,12 @@ class ModelInfo(TableFunctionGenerator[ModelInfoArgs]):
 
     @classmethod
     def cardinality(cls, params: BindParams[ModelInfoArgs]) -> TableCardinality:
+        """Return the single-row cardinality of a model lookup."""
         return TableCardinality(estimate=1, max=1)
 
     @classmethod
     def process(cls, params: ProcessParams[ModelInfoArgs], state: None, out: Any) -> None:
+        """Look up the named model and emit its metadata row, or nothing if it is absent."""
         try:
             models = [get_store().load(params.args.model_name)]
         except ModelNotFoundError:
@@ -627,6 +668,8 @@ class ModelInfo(TableFunctionGenerator[ModelInfoArgs]):
 
 @dataclass(slots=True, frozen=True)
 class DropModelArgs:
+    """Arguments for the drop_model function."""
+
     model_name: Annotated[str, Arg(0, doc="Name of the model to delete.")]
 
 
@@ -641,9 +684,13 @@ _DROP_SCHEMA = pa.schema(
 @init_single_worker
 @bind_fixed_schema
 class DropModel(TableFunctionGenerator[DropModelArgs]):
+    """Delete a model from the registry and report whether it existed."""
+
     FIXED_SCHEMA: ClassVar[pa.Schema] = _DROP_SCHEMA
 
     class Meta:
+        """Catalog metadata for the drop_model function."""
+
         name = "drop_model"
         description = "Delete a model from the registry"
         categories = ["regression", "registry"]
@@ -653,10 +700,12 @@ class DropModel(TableFunctionGenerator[DropModelArgs]):
 
     @classmethod
     def cardinality(cls, params: BindParams[DropModelArgs]) -> TableCardinality:
+        """Return the single-row cardinality of a delete operation."""
         return TableCardinality(estimate=1, max=1)
 
     @classmethod
     def process(cls, params: ProcessParams[DropModelArgs], state: None, out: Any) -> None:
+        """Delete the named model and emit a row reporting whether it was removed."""
         name = params.args.model_name
         dropped = get_store().delete(name)
         out.emit(pa.RecordBatch.from_pydict({"model_name": [name], "dropped": [dropped]}, schema=params.output_schema))

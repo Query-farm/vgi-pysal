@@ -16,8 +16,17 @@ COLUMBUS = invoke_table_function(ColumbusFunction)
 
 def _args(**over) -> SimpleNamespace:
     base = dict(
-        model="ols", target="crime", id="id", w_type="queen", geom="geom", x="x", y="y",
-        k=4, threshold=0.0, kernel_function="triangular", transform="r",
+        model="ols",
+        target="crime",
+        id="id",
+        w_type="queen",
+        geom="geom",
+        x="x",
+        y="y",
+        k=4,
+        threshold=0.0,
+        kernel_function="triangular",
+        transform="r",
     )
     base.update(over)
     return SimpleNamespace(**base)

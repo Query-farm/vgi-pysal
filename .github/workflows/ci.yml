@@ -36,6 +36,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+  # Static gates (ruff lint + format, strict mypy, pydoclint) — config adopted
+  # from vgi-python. Linux-only; the rules are platform-independent.
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - name: Install (from the lockfile)
+        run: uv sync --frozen --python 3.13
+      - name: ruff lint
+        run: uv run --frozen ruff check .
+      - name: ruff format
+        run: uv run --frozen ruff format --check .
+      - name: mypy (strict)
+        run: uv run --frozen mypy vgi_pysal/ pysal_worker.py serve.py
+      - name: pydoclint
+        run: uv run --frozen pydoclint vgi_pysal/ pysal_worker.py serve.py
+
   unit:
     strategy:
       fail-fast: false

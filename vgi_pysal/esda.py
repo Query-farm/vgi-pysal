@@ -25,8 +25,9 @@ import pyarrow as pa
 from vgi.arguments import Arg
 from vgi.invocation import BindResponse
 from vgi.metadata import FunctionExample
-from vgi.table_buffering_function import OutputCollector, TableBufferingParams
+from vgi.table_buffering_function import TableBufferingParams
 from vgi.table_function import BindParams
+from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of, numeric_column
 from .schema_utils import field as sfield
@@ -50,6 +51,8 @@ _GLOBAL_SCHEMA = pa.schema(
 
 @dataclass(slots=True, frozen=True)
 class GlobalEsdaArgs(WeightsArgs):
+    """Weights arguments plus the value column, permutation count, and seed for global ESDA statistics."""
+
     value: Annotated[str, Arg("value", default="y", doc="Numeric column to test for spatial autocorrelation.")]
     permutations: Annotated[int, Arg("permutations", default=999, doc="Conditional permutations for inference.")]
     seed: Annotated[int, Arg("seed", default=12345, doc="Random seed for reproducible permutation p-values.")]
@@ -67,6 +70,7 @@ class _GlobalStat(SinkBuffer[GlobalEsdaArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[GlobalEsdaArgs]) -> BindResponse:
+        """Validate arguments and declare the global-statistic output schema."""
         validate_weights_args(params.args)
         return BindResponse(output_schema=_GLOBAL_SCHEMA)
 
@@ -74,6 +78,7 @@ class _GlobalStat(SinkBuffer[GlobalEsdaArgs, DrainState]):
     def initial_finalize_state(
         cls, finalize_state_id: bytes, params: TableBufferingParams[GlobalEsdaArgs]
     ) -> DrainState:
+        """Create the initial drain state for the finalize phase."""
         return DrainState()
 
     @classmethod
@@ -84,6 +89,7 @@ class _GlobalStat(SinkBuffer[GlobalEsdaArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Build the weights, compute the global statistic, and emit one row of results."""
         if state.done:
             out.finish()
             return
@@ -117,7 +123,11 @@ class _GlobalStat(SinkBuffer[GlobalEsdaArgs, DrainState]):
 
 
 class MoranFn(_GlobalStat):
+    """Compute the global Moran's I autocorrelation statistic over a value column."""
+
     class Meta:
+        """Catalog metadata for the moran function."""
+
         name = "moran"
         description = "Global Moran's I spatial autocorrelation statistic"
         categories = ["esda", "autocorrelation", "spatial"]
@@ -130,6 +140,7 @@ class MoranFn(_GlobalStat):
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, permutations: int) -> dict[str, float]:
+        """Run esda.Moran and return its statistic, expectation, variance, and p-values."""
         mi = esda.Moran(y, w, permutations=permutations)
         return {
             "statistic": float(mi.I),
@@ -142,7 +153,11 @@ class MoranFn(_GlobalStat):
 
 
 class GearyFn(_GlobalStat):
+    """Compute the global Geary's C autocorrelation statistic over a value column."""
+
     class Meta:
+        """Catalog metadata for the geary function."""
+
         name = "geary"
         description = "Global Geary's C spatial autocorrelation statistic"
         categories = ["esda", "autocorrelation", "spatial"]
@@ -155,6 +170,7 @@ class GearyFn(_GlobalStat):
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, permutations: int) -> dict[str, float]:
+        """Run esda.Geary and return its statistic, expectation, variance, and p-values."""
         gc = esda.Geary(y, w, permutations=permutations)
         return {
             "statistic": float(gc.C),
@@ -167,7 +183,11 @@ class GearyFn(_GlobalStat):
 
 
 class GetisOrdGFn(_GlobalStat):
+    """Compute the Getis-Ord General G statistic over a value column."""
+
     class Meta:
+        """Catalog metadata for the getis_ord_g function."""
+
         name = "getis_ord_g"
         description = "Getis-Ord General G statistic (global concentration of high/low values)"
         categories = ["esda", "autocorrelation", "spatial"]
@@ -183,6 +203,7 @@ class GetisOrdGFn(_GlobalStat):
 
     @classmethod
     def compute(cls, y: np.ndarray, w: Any, permutations: int) -> dict[str, float]:
+        """Run esda.G with binary weights and return its statistic, expectation, variance, and p-values."""
         # Getis-Ord G requires binary (or distance) weights, not row-standardised.
         if w.transform == "R":
             w.transform = "B"

@@ -27,8 +27,20 @@ def _w(**over):
 
 def _args(**over) -> SimpleNamespace:
     base = dict(
-        w_type="queen", geom="geom", x="x", y="y", k=8, threshold=0.0, kernel_function="triangular",
-        transform="r", value="crime", id="id", permutations=999, seed=12345, significance=0.05, star=True,
+        w_type="queen",
+        geom="geom",
+        x="x",
+        y="y",
+        k=8,
+        threshold=0.0,
+        kernel_function="triangular",
+        transform="r",
+        value="crime",
+        id="id",
+        permutations=999,
+        seed=12345,
+        significance=0.05,
+        star=True,
     )
     base.update(over)
     return SimpleNamespace(**base)

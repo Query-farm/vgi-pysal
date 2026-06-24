@@ -29,7 +29,7 @@ FLY_APP        ?= vgi-pysal
 # Isolated model registry for local SQL tests (stdio/http workers inherit this).
 TEST_MODELS_DIR ?= $(CURDIR)/.test-models
 
-.PHONY: test pytest test-stdio test-http test-cloud build push smoke-test deploy venv
+.PHONY: test pytest lint typecheck check test-stdio test-http test-cloud build push smoke-test deploy venv
 
 venv:
 	uv venv --python 3.13
@@ -37,12 +37,26 @@ venv:
 		"vgi-python[http,oauth] @ $(VGI_PYTHON_SRC)" \
 		"vgi-rpc[sentry] @ $(VGI_RPC_SRC)" \
 		"libpysal>=4.12" "esda>=2.5" "spreg>=1.6" "mapclassify>=2.6" \
-		"inequality>=1.0" "shapely>=2.0" "geopandas>=1.0" numpy pytest
+		"inequality>=1.0" "shapely>=2.0" "geopandas>=1.0" numpy pytest mypy pydoclint
+
+# Static gates (config in pyproject.toml, adopted from vgi-python): ruff lint +
+# format, strict mypy, and the pydoclint docstring gate.
+PKG_SOURCES = vgi_pysal/ pysal_worker.py serve.py
+
+lint:
+	uvx ruff check .
+	uvx ruff format --check .
+
+typecheck:
+	.venv/bin/mypy $(PKG_SOURCES)
+	.venv/bin/pydoclint $(PKG_SOURCES)
+
+check: lint typecheck pytest
 
 pytest:
 	.venv/bin/pytest tests/ --rootdir=. -o "addopts=" -q
 
-test: pytest test-stdio test-http
+test: check test-stdio test-http
 
 test-stdio:
 	rm -rf "$(TEST_MODELS_DIR)"

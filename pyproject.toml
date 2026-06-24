@@ -74,6 +74,7 @@ dev = [
     "pytest",
     "pyarrow",
     "ruff",
+    "mypy",
     "pydoclint",
 ]
 
@@ -81,20 +82,45 @@ dev = [
 addopts = "-q"
 testpaths = ["tests"]
 
+# Tooling config adopted from vgi-python (ruff with the D docstring rules + the
+# google convention, double-quote formatting, strict mypy, and pydoclint).
+
 [tool.ruff]
 line-length = 120
 target-version = "py313"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "C4", "SIM"]
-ignore = [
-    "E741",  # ambiguous variable name (x, y are conventional for coordinates)
-    "B008",  # function call in argument default (Arg(...) defaults are intentional)
-]
+select = ["E", "F", "I", "UP", "B", "SIM", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
 
 [tool.ruff.lint.per-file-ignores]
-# tests: E402 (sys.path shim before imports), C408 (dict(...) kwargs read clearly in fixtures)
-"tests/*" = ["E402", "C408"]
+# tests: sys.path shim before imports (E402); test functions are self-documenting (D).
+"tests/*" = ["E402", "D"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+# The PySAL stack and its geo dependencies ship no type stubs.
+module = [
+    "libpysal.*",
+    "esda.*",
+    "spreg.*",
+    "mapclassify.*",
+    "inequality.*",
+    "geopandas.*",
+    "shapely.*",
+    "pandas.*",
+]
+ignore_missing_imports = true
 
 [tool.pydoclint]
 # Docstring consistency gate (complements ruff's `D` rules). Mirrors the

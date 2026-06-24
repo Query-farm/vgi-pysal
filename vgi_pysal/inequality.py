@@ -42,6 +42,7 @@ class _BufferedInequality(AggregateFunction[ValueState]):
 
     @classmethod
     def initial_state(cls, params: ProcessParams[None]) -> ValueState:
+        """Create an empty value buffer for a new group."""
         return ValueState()
 
     @classmethod
@@ -51,6 +52,7 @@ class _BufferedInequality(AggregateFunction[ValueState]):
         group_ids: pa.Int64Array,
         value: Annotated[pa.DoubleArray, Param(doc="Numeric value whose distribution is measured")],
     ) -> None:
+        """Append this batch's non-null values to each group's buffer."""
         # Accumulate this batch per group, then *reassign* states[g]: the framework
         # only persists groups assigned in this batch (see the aggregate
         # state-persistence sharp edge documented in the sklearn worker).
@@ -65,6 +67,7 @@ class _BufferedInequality(AggregateFunction[ValueState]):
 
     @classmethod
     def combine(cls, source: ValueState, target: ValueState, params: ProcessParams[None]) -> ValueState:
+        """Merge two partial group buffers into one."""
         return ValueState(values=source.values + target.values)
 
     @classmethod
@@ -74,6 +77,7 @@ class _BufferedInequality(AggregateFunction[ValueState]):
         states: dict[int, ValueState],
         params: ProcessParams[None],
     ) -> Annotated[pa.RecordBatch, Returns(pa.float64())]:
+        """Compute the inequality measure per group, emitting NULL for groups with fewer than two values."""
         results: list[float | None] = []
         for gid in group_ids:
             s = states.get(gid.as_py())
@@ -88,11 +92,16 @@ class _BufferedInequality(AggregateFunction[ValueState]):
 
     @classmethod
     def compute_measure(cls, values: np.ndarray) -> float:  # pragma: no cover
+        """Compute the inequality measure for one group's distribution of values."""
         raise NotImplementedError
 
 
 class GiniFn(_BufferedInequality):
+    """Gini coefficient aggregate function."""
+
     class Meta:
+        """Catalog metadata for the gini function."""
+
         name = "gini"
         description = "Gini coefficient of inequality (0 = perfect equality, 1 = maximal inequality)"
         categories = ["inequality", "spatial"]
@@ -105,11 +114,16 @@ class GiniFn(_BufferedInequality):
 
     @classmethod
     def compute_measure(cls, values: np.ndarray) -> float:
+        """Compute the Gini coefficient of the values."""
         return float(Gini(values).g)
 
 
 class TheilFn(_BufferedInequality):
+    """Theil's T entropy index aggregate function."""
+
     class Meta:
+        """Catalog metadata for the theil function."""
+
         name = "theil"
         description = "Theil's T entropy index of inequality"
         categories = ["inequality", "spatial"]
@@ -122,6 +136,7 @@ class TheilFn(_BufferedInequality):
 
     @classmethod
     def compute_measure(cls, values: np.ndarray) -> float:
+        """Compute Theil's T index of the values."""
         return float(Theil(values).T)
 
 

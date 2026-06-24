@@ -67,6 +67,7 @@ class PysalCatalog(ReadOnlyCatalogInterface):
     catalog_name = _PYSAL_CATALOG.name
 
     def catalogs(self) -> list[CatalogInfo]:
+        """Advertise the pysal catalog with its data and implementation versions."""
         return [
             CatalogInfo(
                 name=self._effective_catalog_name,
@@ -77,6 +78,7 @@ class PysalCatalog(ReadOnlyCatalogInterface):
         ]
 
     def catalog_attach(self, **kwargs: Any) -> CatalogAttachResult:
+        """Attach the catalog, stamping the resolved data and implementation versions."""
         result = super().catalog_attach(**kwargs)
         return dataclasses.replace(
             result,

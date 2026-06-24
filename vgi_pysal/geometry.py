@@ -23,14 +23,16 @@ import shapely
 
 
 def has_column(table: pa.Table, name: str) -> bool:
+    """Report whether the table has a column with the given name."""
     return name in table.schema.names
 
 
 def is_binary_column(table: pa.Table, name: str) -> bool:
+    """Report whether the named column exists and holds binary (WKB-capable) bytes."""
     if name not in table.schema.names:
         return False
     t = table.schema.field(name).type
-    return pa.types.is_binary(t) or pa.types.is_large_binary(t)
+    return bool(pa.types.is_binary(t) or pa.types.is_large_binary(t))
 
 
 def parse_wkb_column(table: pa.Table, name: str) -> list[shapely.Geometry]:

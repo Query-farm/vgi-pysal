@@ -30,8 +30,9 @@ from libpysal import weights as lpw
 from vgi.arguments import Arg, TableInput
 from vgi.invocation import BindResponse
 from vgi.metadata import FunctionExample
-from vgi.table_buffering_function import OutputCollector, TableBufferingParams
+from vgi.table_buffering_function import TableBufferingParams
 from vgi.table_function import BindParams
+from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of
 from .geometry import coords_from_columns, coords_from_geometries, has_column, parse_wkb_column
@@ -82,6 +83,7 @@ class WeightsArgs:
 
 
 def normalise_w_type(w_type: str) -> str:
+    """Normalise and validate a weights-type string against the supported set."""
     wt = (w_type or "").strip().lower()
     if wt not in W_TYPES:
         raise ValueError(f"unknown w_type {w_type!r}; choose one of: {', '.join(sorted(W_TYPES))}")
@@ -89,6 +91,7 @@ def normalise_w_type(w_type: str) -> str:
 
 
 def normalise_transform(transform: str) -> str:
+    """Map a friendly transform name to its libpysal single-letter code."""
     code = _TRANSFORMS.get((transform or "").strip().lower())
     if code is None:
         raise ValueError(f"unknown transform {transform!r}; choose one of: r (row), b (binary), o (original), d, v")
@@ -160,6 +163,8 @@ def cardinalities(w: lpw.W) -> np.ndarray:
 
 @dataclass(slots=True, frozen=True)
 class WeightsEdgeArgs(WeightsArgs):
+    """Weights arguments plus an optional id column for labelling edge endpoints."""
+
     id: Annotated[
         str,
         Arg(
@@ -183,6 +188,8 @@ class WeightsFn(SinkBuffer[WeightsEdgeArgs, DrainState]):
     FunctionArguments: ClassVar[type] = WeightsEdgeArgs
 
     class Meta:
+        """Catalog metadata for the weights function."""
+
         name = "weights"
         description = "Build spatial weights and return the neighbour graph as an edge list"
         categories = ["weights", "spatial"]
@@ -205,6 +212,7 @@ class WeightsFn(SinkBuffer[WeightsEdgeArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[WeightsEdgeArgs]) -> BindResponse:
+        """Validate arguments and declare the edge-list output schema."""
         validate_weights_args(params.args)
         return BindResponse(output_schema=_WEIGHTS_SCHEMA)
 
@@ -212,6 +220,7 @@ class WeightsFn(SinkBuffer[WeightsEdgeArgs, DrainState]):
     def initial_finalize_state(
         cls, finalize_state_id: bytes, params: TableBufferingParams[WeightsEdgeArgs]
     ) -> DrainState:
+        """Create the initial drain state for the finalize phase."""
         return DrainState()
 
     @classmethod
@@ -222,6 +231,7 @@ class WeightsFn(SinkBuffer[WeightsEdgeArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Build the weights graph and emit one row per neighbour link."""
         if state.done:
             out.finish()
             return
@@ -291,6 +301,8 @@ class WeightsSummaryFn(SinkBuffer[WeightsArgs, DrainState]):
     FunctionArguments: ClassVar[type] = WeightsArgs
 
     class Meta:
+        """Catalog metadata for the weights_summary function."""
+
         name = "weights_summary"
         description = "Structural diagnostics for a spatial weights matrix (connectivity, islands)"
         categories = ["weights", "spatial"]
@@ -303,11 +315,13 @@ class WeightsSummaryFn(SinkBuffer[WeightsArgs, DrainState]):
 
     @classmethod
     def on_bind(cls, params: BindParams[WeightsArgs]) -> BindResponse:
+        """Validate arguments and declare the summary output schema."""
         validate_weights_args(params.args)
         return BindResponse(output_schema=_SUMMARY_SCHEMA)
 
     @classmethod
     def initial_finalize_state(cls, finalize_state_id: bytes, params: TableBufferingParams[WeightsArgs]) -> DrainState:
+        """Create the initial drain state for the finalize phase."""
         return DrainState()
 
     @classmethod
@@ -318,6 +332,7 @@ class WeightsSummaryFn(SinkBuffer[WeightsArgs, DrainState]):
         state: DrainState,
         out: OutputCollector,
     ) -> None:
+        """Build the weights matrix and emit a single row of structural diagnostics."""
         if state.done:
             out.finish()
             return

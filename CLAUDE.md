@@ -154,12 +154,34 @@ The repo is an installable package (`pyproject.toml`, hatchling, `uv.lock`):
 spreg, mapclassify, inequality, shapely, geopandas) and exposes the `vgi-pysal`
 (stdio) and `vgi-pysal-http` console scripts. The worker uses only **stable**
 vgi-python features (no union-typed arguments), so it pins plain PyPI
-`vgi-python>=0.8.1` — no vendoring and no version gating. Lint/format is ruff
-(config in `pyproject.toml`). GitHub Actions (`.github/workflows/ci.yml` + `ci/`)
-runs the unit + SQL suites on Linux/macOS/Windows against the **signed community
-`vgi` extension** via a prebuilt `haybarn-unittest` — no C++ build (see
+`vgi-python>=0.8.1` — no vendoring and no version gating. GitHub Actions
+(`.github/workflows/ci.yml` + `ci/`) runs a `static` gate (ruff + mypy +
+pydoclint) plus the unit + SQL suites on Linux/macOS/Windows against the **signed
+community `vgi` extension** via a prebuilt `haybarn-unittest` — no C++ build (see
 `ci/README.md`). Keep PyPI deps in `pyproject.toml` in sync with the PEP 723
 headers in `pysal_worker.py`/`serve.py` and the Dockerfile `pip install` line.
+
+## Static analysis (adopted from vgi-python)
+
+Tooling config in `pyproject.toml` matches the `vgi-python` repo: **ruff** with
+the `D` docstring rules (`select = ["E","F","I","UP","B","SIM","D"]`, google
+convention, double-quote format), **strict mypy**, and the **pydoclint**
+docstring-consistency gate. `make check` runs all three plus pytest; `make lint`
+and `make typecheck` run subsets. Notes:
+
+- Every public class/method/function (including each `Meta` block) has a
+  docstring — required by ruff `D`. pydoclint here only validates `Args:`/
+  `Attributes:` sections *if present*, so the summary-line docstrings pass it.
+- mypy is **strict**. `OutputCollector` must be imported from its canonical home
+  `vgi_rpc.rpc` (the `vgi.table_*` modules re-import but don't re-export it, so
+  strict no-implicit-reexport rejects importing it from there). The untyped PySAL
+  stack (libpysal/esda/spreg/mapclassify/inequality/geopandas/shapely/pandas) is
+  declared `ignore_missing_imports` via `[[tool.mypy.overrides]]`; the two
+  untyped `pa.ipc` IPC calls in `buffering.py` carry a narrow
+  `# type: ignore[no-untyped-call]`. Generic buffering bases bind their TypeVar
+  (`_LocalStat[TArgs: LocalEsdaArgs]`) so attribute access on `params.args` type-checks.
+- mypy is run over the package + shims (`vgi_pysal/ pysal_worker.py serve.py`),
+  not the tests (which use dynamic `SimpleNamespace` fixtures).
 
 ## Testing
 

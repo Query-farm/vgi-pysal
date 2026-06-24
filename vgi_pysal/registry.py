@@ -33,6 +33,7 @@ class ModelNotFoundError(KeyError):
 
 
 def validate_name(name: str) -> str:
+    """Validate a model name and reject values unsafe as a filename."""
     if not name or not _NAME_RE.match(name) or "/" in name or ".." in name:
         raise ModelNameError(
             f"invalid model name {name!r}: use letters, digits, '_', '-', '.' and do not start with a separator"
@@ -70,10 +71,12 @@ class SpatialModel:
     created_at: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the model's fields as a plain dictionary."""
         return asdict(self)
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> SpatialModel:
+        """Build a model from a dictionary, ignoring unknown keys."""
         known = {f for f in cls.__dataclass_fields__}  # noqa: C416
         return cls(**{k: v for k, v in d.items() if k in known})
 
@@ -82,18 +85,23 @@ class ModelStore:
     """Abstract model store. Implementations persist a ``SpatialModel`` by name."""
 
     def save(self, model: SpatialModel) -> None:
+        """Persist a model under its name."""
         raise NotImplementedError
 
     def load(self, name: str) -> SpatialModel:
+        """Load and return the model stored under the given name."""
         raise NotImplementedError
 
     def list(self) -> list[SpatialModel]:
+        """Return all models currently held in the store."""
         raise NotImplementedError
 
     def delete(self, name: str) -> bool:
+        """Delete the named model, returning whether it existed."""
         raise NotImplementedError
 
     def exists(self, name: str) -> bool:
+        """Report whether a model with the given name is stored."""
         raise NotImplementedError
 
 
@@ -101,23 +109,28 @@ class LocalDiskStore(ModelStore):
     """Stores each model as ``<root>/<name>.json``."""
 
     def __init__(self, root: str | os.PathLike[str]) -> None:
+        """Initialize the store rooted at the given directory."""
         self.root = Path(root)
 
     def _path(self, name: str) -> Path:
+        """Return the on-disk JSON path for a validated model name."""
         validate_name(name)
         return self.root / f"{name}.json"
 
     def save(self, model: SpatialModel) -> None:
+        """Write the model to ``<root>/<name>.json``, creating the root if needed."""
         self.root.mkdir(parents=True, exist_ok=True)
         self._path(model.name).write_text(json.dumps(model.to_dict(), indent=2, default=str))
 
     def load(self, name: str) -> SpatialModel:
+        """Read the named model from disk."""
         path = self._path(name)
         if not path.exists():
             raise ModelNotFoundError(name)
         return SpatialModel.from_dict(json.loads(path.read_text()))
 
     def list(self) -> list[SpatialModel]:
+        """Return all models found under the root, skipping unreadable files."""
         if not self.root.exists():
             return []
         out: list[SpatialModel] = []
@@ -129,12 +142,14 @@ class LocalDiskStore(ModelStore):
         return out
 
     def delete(self, name: str) -> bool:
+        """Remove the named model's file, returning whether it existed."""
         path = self._path(name)
         existed = path.exists()
         path.unlink(missing_ok=True)
         return existed
 
     def exists(self, name: str) -> bool:
+        """Report whether the named model's file is present on disk."""
         return self._path(name).exists()
 
 
@@ -161,6 +176,7 @@ def set_store(store: ModelStore | None) -> None:
 
 
 def now_iso() -> str:
+    """Return the current UTC time as an ISO 8601 string."""
     return datetime.now(UTC).isoformat()
 
 
