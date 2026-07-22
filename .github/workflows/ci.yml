@@ -117,3 +117,38 @@ jobs:
 
       - name: Run extension integration suite
         run: ci/run-integration.sh
+
+  # ------------------------------------------------------------------------
+  # Metadata quality (vgi-lint).
+  #
+  # This worker was the fleet's only ungated one that still attaches cleanly,
+  # and it carries a large backlog of metadata findings (34 error / 156 warning
+  # at the time this gate was added). Gating it at `info` outright would just be
+  # red forever, so it gates against a BASELINE: the existing findings are
+  # recorded in vgi-lint-baseline.default.json and only *new* ones fail the
+  # build. That stops the backlog from growing while it is worked down; shrink
+  # the baseline by fixing findings and re-running with --update-baseline.
+  #
+  # No `version:` pin — fleet policy is that workers track the latest published
+  # linter, so this gate holds the worker to the current bar. The baseline, not
+  # a pin, is what absorbs the existing backlog.
+  #
+  # execute: false — the example queries have never been proven to run here, so
+  # turning execution on is a separate step (it would fail today).
+  vgi-lint:
+    name: Metadata quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - name: Sync
+        run: uv sync --frozen
+      - name: vgi-lint
+        uses: Query-farm/vgi-lint-check@v1
+        with:
+          location: "${{ github.workspace }}/.venv/bin/vgi-pysal"
+          execute: "false"
+          fail-on: info
+          baseline: vgi-lint-baseline
