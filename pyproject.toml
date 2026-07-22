@@ -22,7 +22,7 @@ classifiers = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "vgi-python[http]>=0.8.1",
+    "vgi-python[http]>=0.17.0",
     "libpysal>=4.12",
     "esda>=2.5",
     "spreg>=1.6",
@@ -39,7 +39,7 @@ dependencies = [
 # the base deps: the published Docker image installs `.[serve]`, while a plain
 # `pip install vgi-pysal` for an on-host stdio worker stays lean.
 serve = [
-    "vgi-python[http,oauth]>=0.8.1",
+    "vgi-python[http,oauth]>=0.17.0",
     "vgi-rpc[sentry]",
     "authlib",
 ]
