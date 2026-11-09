@@ -154,7 +154,7 @@ The repo is an installable package (`pyproject.toml`, hatchling, `uv.lock`):
 spreg, mapclassify, inequality, shapely, geopandas) and exposes the `vgi-pysal`
 (stdio) and `vgi-pysal-http` console scripts. The worker uses only **stable**
 vgi-python features (no union-typed arguments), so it pins plain PyPI
-`vgi-python>=0.8.1` — no vendoring and no version gating. GitHub Actions
+`vgi-python>=0.50.0` (VGI protocol 3.2) — no vendoring and no version gating. GitHub Actions
 (`.github/workflows/ci.yml` + `ci/`) runs a `static` gate (ruff + mypy +
 pydoclint) plus the unit + SQL suites on Linux/macOS/Windows against the **signed
 community `vgi` extension** via a prebuilt `haybarn-unittest` — no C++ build (see

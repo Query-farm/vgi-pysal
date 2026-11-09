@@ -52,7 +52,7 @@ _PYSAL_CATALOG = Catalog(
     default_schema="main",
     schemas=[
         Schema(
-            name="main",
+            path=["main"],
             comment="PySAL spatial datasets, weights, autocorrelation, classification, and regression for SQL",
             functions=list(_FUNCTIONS),
         ),
