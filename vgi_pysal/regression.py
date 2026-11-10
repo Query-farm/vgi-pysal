@@ -23,6 +23,8 @@ Functions:
 
 from __future__ import annotations
 
+import contextlib
+import sys
 from dataclasses import dataclass
 from typing import Annotated, Any, ClassVar
 
@@ -119,6 +121,32 @@ class _Fitted:
     k: int
 
 
+def _estimate(model_type: str, y: np.ndarray, x: np.ndarray, w: Any, target: str, feats: list[str]) -> Any:
+    """Run the spreg estimator for ``model_type`` with its stdout sent to stderr.
+
+    Over stdio, fd 1 is the worker's Arrow IPC stream, so a stray ``print()``
+    from the estimator corrupts it (DuckDB then reports "Pre-1.0 (4-byte
+    prefix) IPC messages are not supported"). spreg 1.9.2 prints the class
+    name from ``spreg.output`` for ML_Lag/GM_Lag.
+
+    Args:
+        model_type: Normalised model key (see ``normalise_model``).
+        y: Target column as an (n, 1) array.
+        x: Explanatory matrix, one column per feature.
+        w: libpysal spatial weights.
+        target: Target column name (for spreg's labels).
+        feats: Explanatory column names.
+
+    Returns:
+        The fitted spreg model object.
+    """
+    cls = _MODELS[model_type]
+    with contextlib.redirect_stdout(sys.stderr):
+        if model_type == "ols":
+            return cls(y, x, w=w, spat_diag=True, moran=True, name_y=target, name_x=feats)
+        return cls(y, x, w=w, name_y=target, name_x=feats)
+
+
 def _fit(table: pa.Table, args: Any) -> _Fitted:
     """Fit the requested estimator and normalise its outputs."""
     model_type = normalise_model(args.model)
@@ -129,11 +157,7 @@ def _fit(table: pa.Table, args: Any) -> _Fitted:
     x = matrix(table, feats, what="explanatory")
     w = build_weights(table, args)
 
-    cls = _MODELS[model_type]
-    if model_type == "ols":
-        m = cls(y, x, w=w, spat_diag=True, moran=True, name_y=args.target, name_x=feats)
-    else:
-        m = cls(y, x, w=w, name_y=args.target, name_x=feats)
+    m = _estimate(model_type, y, x, w, args.target, feats)
 
     betas = m.betas.flatten()
     names = _param_names(m, betas)
@@ -404,10 +428,7 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
         x = matrix(table, feats, what="explanatory")
         w = build_weights(table, a)
         model_type = normalise_model(a.model)
-        if model_type == "ols":
-            model_obj = _MODELS[model_type](y, x, w=w, spat_diag=True, moran=True, name_y=a.target, name_x=feats)
-        else:
-            model_obj = _MODELS[model_type](y, x, w=w, name_y=a.target, name_x=feats)
+        model_obj = _estimate(model_type, y, x, w, a.target, feats)
 
         betas = model_obj.betas.flatten()
         fitted = _Fitted(

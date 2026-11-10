@@ -54,6 +54,22 @@ class TestFit:
         assert any(n.startswith("W_") for n in fitted.param_names)
         assert len(fitted.betas) == 4
 
+    def test_estimator_prints_never_reach_stdout(self, monkeypatch, capsys) -> None:
+        # stdout is the stdio worker's IPC stream; spreg 1.9.2 print()s from ML_Lag.
+        import vgi_pysal.regression as reg
+
+        real = reg._MODELS["ml_lag"]
+
+        def noisy(*a, **k):
+            print("ML_Lag")
+            return real(*a, **k)
+
+        monkeypatch.setitem(reg._MODELS, "ml_lag", noisy)
+        _fit(SUBSET, _args(model="ml_lag"))
+        out = capsys.readouterr()
+        assert out.out == ""
+        assert "ML_Lag" in out.err
+
     def test_ml_error_has_lambda(self) -> None:
         fitted = _fit(SUBSET, _args(model="ml_error"))
         assert "lambda" in fitted.param_names
