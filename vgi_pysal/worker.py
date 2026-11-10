@@ -50,10 +50,23 @@ _FUNCTIONS: list[type] = [
 _PYSAL_CATALOG = Catalog(
     name="pysal",
     default_schema="main",
+    comment="PySAL spatial statistics for SQL: datasets, weights, autocorrelation, classification, and regression.",
+    source_url="https://github.com/Query-farm/vgi-pysal",
+    tags={
+        "vgi.title": "PySAL Spatial Analysis",
+        "vgi.subtitle": (
+            "Spatial weights, autocorrelation tests, map classification, inequality measures, "
+            "and spatial regression from PySAL, callable from SQL."
+        ),
+        "vgi.author": "Query.Farm",
+        "vgi.copyright": "Copyright 2026 Query Farm LLC",
+        "vgi.license": "MIT",
+    },
     schemas=[
         Schema(
             path=["main"],
             comment="PySAL spatial datasets, weights, autocorrelation, classification, and regression for SQL",
+            tags={"vgi.title": "PySAL Functions"},
             functions=list(_FUNCTIONS),
         ),
     ],
