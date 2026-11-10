@@ -59,8 +59,13 @@ jobs:
         run: uv run --frozen ruff format --check .
       - name: mypy (strict)
         run: uv run --frozen mypy vgi_pysal/ pysal_worker.py serve.py
+      # Run pydoclint in its own tool env: its docstring_parser_fork dependency
+      # installs into the same docstring_parser/ package as vgi-rpc's
+      # docstring-parser, and whichever wins the install race decides whether
+      # `from docstring_parser.common import DocstringYields` works. uvx keeps
+      # the two apart (same pin as uv.lock), as the rest of the fleet does.
       - name: pydoclint
-        run: uv run --frozen pydoclint vgi_pysal/ pysal_worker.py serve.py
+        run: uvx pydoclint==0.8.7 --config pyproject.toml vgi_pysal/ pysal_worker.py serve.py
 
   unit:
     strategy:

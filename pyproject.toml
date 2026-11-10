@@ -144,7 +144,7 @@ ignore_missing_imports = true
 
 [tool.pydoclint]
 # Docstring consistency gate (complements ruff's `D` rules). Mirrors the
-# vgi-python settings. Run via `uv run pydoclint vgi_pysal/ pysal_worker.py
+# vgi-python settings. Run via `uvx pydoclint --config pyproject.toml vgi_pysal/ pysal_worker.py
 # serve.py`; also enforced inside the pytest suite by tests/test_docstrings.py.
 style = "google"
 arg_type_hints_in_docstring = false
