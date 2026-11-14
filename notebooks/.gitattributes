@@ -1,0 +1,2 @@
+# Preserve the provenance-hashed CSV bytes, including CRLF line endings.
+fixtures/*.csv -text whitespace=cr-at-eol
