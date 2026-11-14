@@ -35,12 +35,16 @@ from vgi.table_function import BindParams
 from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of
+from .examples import SPATIAL_LAG
 from .geometry import coords_from_columns, coords_from_geometries, has_column, parse_wkb_column
 from .schema_utils import field as sfield
 
 CONTIGUITY = {"queen", "rook"}
 DISTANCE = {"knn", "distance_band", "kernel"}
 W_TYPES = CONTIGUITY | DISTANCE
+
+# libpysal Kernel weight functions.
+KERNEL_FUNCTIONS = ["triangular", "uniform", "quadratic", "quartic", "gaussian"]
 
 # libpysal single-letter transform codes, exposed under friendly names.
 _TRANSFORMS = {
@@ -63,9 +67,15 @@ class WeightsArgs:
     convention (``w_type`` + ``geom`` or ``x``/``y``) is identical everywhere.
     """
 
-    data: Annotated[TableInput, Arg(0, doc="Input table with a WKB 'geom' column and/or 'x'/'y' coordinate columns.")]
+    data: Annotated[TableInput, Arg(0, doc="Input rows with a WKB 'geom' column and/or 'x'/'y' coordinate columns.")]
     w_type: Annotated[
-        str, Arg("w_type", default="queen", doc="Weights type: queen, rook, knn, distance_band, or kernel.")
+        str,
+        Arg(
+            "w_type",
+            default="queen",
+            doc="Weights type: queen, rook, knn, distance_band, or kernel.",
+            choices=sorted(W_TYPES),
+        ),
     ]
     geom: Annotated[str, Arg("geom", default="geom", doc="WKB geometry column name (for queen/rook).")]
     x: Annotated[str, Arg("x", default="x", doc="X / longitude coordinate column (for distance weights).")]
@@ -75,7 +85,13 @@ class WeightsArgs:
         float, Arg("threshold", default=0.0, doc="Distance band threshold (distance_band; 0 = auto min-nn distance).")
     ]
     kernel_function: Annotated[
-        str, Arg("kernel_function", default="triangular", doc="Kernel: triangular, uniform, quadratic, gaussian.")
+        str,
+        Arg(
+            "kernel_function",
+            default="triangular",
+            doc="Kernel: triangular, uniform, quadratic, quartic, or gaussian.",
+            choices=KERNEL_FUNCTIONS,
+        ),
     ]
     transform: Annotated[
         str, Arg("transform", default="r", doc="Weights transform: r (row-standardised), b (binary), o, d, v.")
@@ -208,6 +224,7 @@ class WeightsFn(SinkBuffer[WeightsEdgeArgs, DrainState]):
                 ),
                 description="5-nearest-neighbour graph from point coordinates",
             ),
+            SPATIAL_LAG,
         ]
 
     @classmethod

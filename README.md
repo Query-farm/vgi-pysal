@@ -94,6 +94,37 @@ ORDER BY cluster;
 `getis_ord_g_local`, which labels each observation `hot`/`cold`/`ns` with a
 `z_score`.
 
+### Join results back to the data
+
+Pass `id =>` and every per-observation result joins back to its source rows, so
+the spatial output composes with plain SQL:
+
+```sql
+-- What do the local Moran crime clusters look like? Profile each cluster type
+SELECT lm.cluster, count(*) AS neighbourhoods, round(avg(c.crime), 1) AS avg_crime,
+       round(avg(c.inc), 1) AS avg_income, round(avg(c.hoval), 1) AS avg_house_value
+FROM pysal.local_moran((SELECT id, crime AS y, geom FROM pysal.columbus()),
+                       w_type => 'queen', id => 'id') AS lm
+JOIN pysal.columbus() AS c USING (id)
+GROUP BY lm.cluster
+ORDER BY avg_crime DESC;
+```
+```
+┌─────────┬────────────────┬───────────┬────────────┬─────────────────┐
+│ cluster │ neighbourhoods │ avg_crime │ avg_income │ avg_house_value │
+├─────────┼────────────────┼───────────┼────────────┼─────────────────┤
+│ HH      │             11 │      52.7 │       10.6 │            29.9 │   -- high-crime clusters are poorer
+│ HL      │              1 │      36.9 │        9.8 │            41.8 │
+│ ns      │             29 │      33.9 │       14.7 │            38.1 │
+│ LL      │              7 │      17.6 │       20.3 │            47.7 │
+│ LH      │              1 │       0.2 │        8.4 │            75.0 │
+└─────────┴────────────────┴───────────┴────────────┴─────────────────┘
+```
+
+The same pattern turns the `weights` edge list into a spatial lag
+(`sum(weight * neighbour value)` grouped by `focal`), or a `quantiles`
+classification of one column into a per-class summary of another.
+
 ### Inspect the weights graph
 
 ```sql
@@ -110,7 +141,7 @@ SELECT * FROM pysal.weights_summary((SELECT geom FROM pysal.columbus()), w_type 
 ```sql
 -- Quantile classes (the binning behind a choropleth), joinable by id
 SELECT id, class, upper_bound
-FROM pysal.quantiles((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5);
+FROM pysal.quantiles((SELECT id, crime AS y FROM pysal.columbus()), value => 'y', k => 5, id => 'id');
 ```
 
 Schemes: `quantiles`, `equal_interval`, `natural_breaks`, `fisher_jenks`,

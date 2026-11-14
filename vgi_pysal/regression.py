@@ -225,7 +225,9 @@ def _to_model(fitted: _Fitted, model_obj: Any, name: str) -> SpatialModel:
 class RegArgs(WeightsArgs):
     """Arguments shared by the spatial-regression table functions."""
 
-    model: Annotated[str, Arg("model", default="ols", doc="Estimator: ols, ml_lag, ml_error, or gm_lag.")]
+    model: Annotated[
+        str, Arg("model", default="ols", doc="Estimator: ols, ml_lag, ml_error, or gm_lag.", choices=list(_MODELS))
+    ]
     target: Annotated[str, Arg("target", default="", doc="Dependent-variable column name (required).")]
     id: Annotated[str, Arg("id", default="", doc="Optional id column excluded from the explanatory variables.")]
 
@@ -477,7 +479,7 @@ class FitModel(SinkBuffer[FitArgs, DrainState]):
 class PredictArgs:
     """Arguments for the predict function."""
 
-    data: Annotated[TableInput, Arg(0, doc="Table to score (must contain the model's explanatory columns).")]
+    data: Annotated[TableInput, Arg(0, doc="Rows to score (must contain the model's explanatory columns).")]
     model_name: Annotated[
         str, Arg("model_name", default="", doc="Name of a model in the registry. Provide this OR model.")
     ]

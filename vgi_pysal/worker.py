@@ -26,6 +26,7 @@ from vgi_pysal import __version__
 from vgi_pysal.classify import CLASSIFY_FUNCTIONS
 from vgi_pysal.datasets import DATASET_FUNCTIONS
 from vgi_pysal.esda import ESDA_FUNCTIONS
+from vgi_pysal.examples import AGENT_TEST_TASKS, SCHEMA_EXAMPLE_QUERIES
 from vgi_pysal.inequality import INEQUALITY_FUNCTIONS
 from vgi_pysal.lisa import LISA_FUNCTIONS
 from vgi_pysal.regression import REGRESSION_FUNCTIONS
@@ -61,12 +62,14 @@ _PYSAL_CATALOG = Catalog(
         "vgi.author": "Query.Farm",
         "vgi.copyright": "Copyright 2026 Query Farm LLC",
         "vgi.license": "MIT",
+        # Analyst tasks for `vgi-lint --agent-check`; graders live in vgi-agent-tests.yaml.
+        "vgi.agent_test_tasks": AGENT_TEST_TASKS,
     },
     schemas=[
         Schema(
             path=["main"],
             comment="PySAL spatial datasets, weights, autocorrelation, classification, and regression for SQL",
-            tags={"vgi.title": "PySAL Functions"},
+            tags={"vgi.title": "PySAL Functions", "vgi.example_queries": SCHEMA_EXAMPLE_QUERIES},
             functions=list(_FUNCTIONS),
         ),
     ],

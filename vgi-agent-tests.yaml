@@ -1,0 +1,32 @@
+# Private graders for the public vgi.agent_test_tasks in the worker's catalog
+# metadata (vgi_pysal/examples.py). `vgi-lint lint --ai` runs an agent on each
+# prompt and grades it against these canonical solutions, merged by task name.
+# The built-in datasets ship inside libpysal and the statistics are seeded, so
+# exact-compare reference_sql is deterministic.
+tasks:
+  - name: mexico_highest_neighbour_gdp
+    reference_sql: >-
+      WITH m AS (SELECT id, name, pcgdp2000 FROM pysal.main.mexico())
+      SELECT own.name
+      FROM pysal.main.weights((SELECT id, geom FROM pysal.main.mexico()), w_type => 'queen', id => 'id') AS w
+      JOIN m AS own ON own.id = w.focal::BIGINT
+      JOIN m AS nb ON nb.id = w.neighbor::BIGINT
+      GROUP BY own.name
+      ORDER BY sum(w.weight * nb.pcgdp2000) DESC
+      LIMIT 1
+    success_criteria: >-
+      Builds queen weights over pysal.mexico(), joins the edge list back to the dataset to compute the
+      row-standardised neighbour average of pcgdp2000, and returns Yucatan (lag ~34,803 vs ~29,855 for
+      the runner-up, Baja California Sur).
+    ignore_column_names: true
+  - name: columbus_hot_spot_house_value
+    reference_sql: >-
+      SELECT count(*) AS hot_spots, round(avg(c.hoval), 1) AS avg_house_value
+      FROM pysal.main.getis_ord_g_local((SELECT id, crime AS y, geom FROM pysal.main.columbus()),
+        w_type => 'knn', k => 8, id => 'id') AS g
+      JOIN pysal.main.columbus() AS c USING (id)
+      WHERE g.hotspot = 'hot'
+    success_criteria: >-
+      Runs getis_ord_g_local on columbus crime with knn k=8, joins the hot spots back to columbus by id,
+      and returns 18 hot spots with an average house value of 32.3.
+    ignore_column_names: true

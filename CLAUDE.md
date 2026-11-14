@@ -28,10 +28,12 @@ vgi_pysal/
   buffering.py        shared SinkBuffer + serialize/column helpers
   geometry.py         WKB / coordinate parsing
   schema_utils.py     pa.Field comment helper, name sanitisation, NoArgs
+  examples.py         composed example SQL (defined once) + vgi.agent_test_tasks prompts
 pysal_worker.py       repo-root stdio shim over vgi_pysal.worker
 serve.py              repo-root HTTP shim over vgi_pysal.worker
 tests/                pytest (in-process harness in tests/harness.py)
 test/sql/*.test       DuckDB sqllogictest — the authoritative integration tests
+vgi-agent-tests.yaml  private graders for the catalog's vgi.agent_test_tasks (vgi-lint --ai)
 ```
 
 To add functions: implement in the relevant `vgi_pysal/*.py`, export a
@@ -154,7 +156,7 @@ The repo is an installable package (`pyproject.toml`, hatchling, `uv.lock`):
 spreg, mapclassify, inequality, shapely, geopandas) and exposes the `vgi-pysal`
 (stdio) and `vgi-pysal-http` console scripts. The worker uses only **stable**
 vgi-python features (no union-typed arguments), so it pins plain PyPI
-`vgi-python>=0.50.0` (VGI protocol 3.2) — no vendoring and no version gating. GitHub Actions
+`vgi-python>=0.51.1` (VGI protocol 3.3) — no vendoring and no version gating. GitHub Actions
 (`.github/workflows/ci.yml` + `ci/`) runs a `static` gate (ruff + mypy +
 pydoclint) plus the unit + SQL suites on Linux/macOS/Windows against the **signed
 community `vgi` extension** via a prebuilt `haybarn-unittest` — no C++ build (see

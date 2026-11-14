@@ -9,11 +9,17 @@ require vgi
 statement ok
 ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION '${VGI_PYSAL_WORKER}');
 
-# unknown weights type is rejected at bind
+# unknown weights type is rejected at bind by the argument's declared choices
 statement error
 SELECT * FROM pysal.weights_summary((SELECT geom FROM pysal.columbus()), w_type => 'octagon');
 ----
-unknown w_type
+Argument 'w_type' has an invalid value
+
+# unknown kernel function is rejected the same way
+statement error
+SELECT * FROM pysal.weights_summary((SELECT x, y FROM pysal.columbus()), w_type => 'kernel', kernel_function => 'cubic');
+----
+Argument 'kernel_function' has an invalid value
 
 # unknown transform is rejected
 statement error
@@ -25,7 +31,7 @@ unknown transform
 statement error
 SELECT * FROM pysal.spreg((SELECT crime AS target, inc, geom FROM pysal.columbus()), model => 'magic', target => 'target');
 ----
-unknown model
+Argument 'model' has an invalid value
 
 # spatial regression requires a target column
 statement error

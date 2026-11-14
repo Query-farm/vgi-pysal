@@ -33,6 +33,7 @@ from vgi.table_function import BindParams
 from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of, numeric_column
+from .examples import INCOME_QUINTILE_CRIME
 from .schema_utils import field as sfield
 
 
@@ -40,7 +41,7 @@ from .schema_utils import field as sfield
 class ClassifyArgs:
     """Arguments shared by every classification table function."""
 
-    data: Annotated[TableInput, Arg(0, doc="Input table containing the value column (and optional id).")]
+    data: Annotated[TableInput, Arg(0, doc="Input rows containing the value column (and optional id).")]
     value: Annotated[str, Arg("value", default="y", doc="Numeric column to classify.")]
     id: Annotated[str, Arg("id", default="", doc="Optional id column to carry through to the output.")]
     k: Annotated[int, Arg("k", default=5, doc="Number of classes (ignored by schemes with data-driven class counts).")]
@@ -125,7 +126,7 @@ def _ex(name: str, extra: str = "") -> list[FunctionExample]:
         FunctionExample(
             sql=(
                 f"SELECT id, class, upper_bound FROM pysal.{name}("
-                f"(SELECT id, crime AS y FROM pysal.columbus()), value => 'y'{args})"
+                f"(SELECT id, crime AS y FROM pysal.columbus()), value => 'y', id => 'id'{args})"
             ),
             description=f"Classify columbus crime with {name}",
         )
@@ -143,7 +144,7 @@ class QuantilesFn(_ClassifyFn):
         name = "quantiles"
         description = "Quantile classification (equal number of observations per class)"
         categories = ["classify", "choropleth"]
-        examples = _ex("quantiles", "k => 5")
+        examples = [*_ex("quantiles", "k => 5"), INCOME_QUINTILE_CRIME]
 
 
 class EqualIntervalFn(_ClassifyFn):

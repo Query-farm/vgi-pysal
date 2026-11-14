@@ -29,6 +29,7 @@ from vgi.table_function import BindParams
 from vgi_rpc.rpc import OutputCollector
 
 from .buffering import DrainState, SinkBuffer, emit_empty, input_schema_of, numeric_column
+from .examples import LISA_PROFILE
 from .schema_utils import field as sfield
 from .spatial_weights import WeightsArgs, build_weights, validate_weights_args
 
@@ -139,7 +140,8 @@ class LocalMoranFn(_LocalStat[LocalEsdaArgs]):
                     "WHERE p_value < 0.05"
                 ),
                 description="Significant local crime clusters/outliers on columbus",
-            )
+            ),
+            LISA_PROFILE,
         ]
 
     @classmethod
