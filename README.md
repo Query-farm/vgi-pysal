@@ -243,19 +243,42 @@ the same interface without touching `regression.py`. Because a fitted model is
 just an intercept, coefficients, and diagnostics, the registry is plain JSON —
 there is no pickle and no code-execution risk on load.
 
-## Install
+## Quick start
 
-```sh
-uv pip install vgi-pysal     # or: pip install vgi-pysal
-```
-
-This installs the `vgi-pysal` (stdio) and `vgi-pysal-http` (HTTP) console
-scripts. Point DuckDB at the stdio one:
+The worker isn't on PyPI; [uv](https://docs.astral.sh/uv/) runs it straight from a tagged release on GitHub. `uvx` builds an isolated environment on the first ATTACH and reuses it afterwards:
 
 ```sql
-INSTALL vgi FROM community; LOAD vgi;
-ATTACH 'pysal' (TYPE vgi, LOCATION 'vgi-pysal');
+INSTALL vgi FROM community;
+LOAD vgi;
+
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'uvx --from git+https://github.com/Query-farm/vgi-pysal@v0.1.0 vgi-pysal');
+
+-- Moran's I of neighbourhood crime on the built-in Columbus dataset.
+SELECT statistic AS morans_i, p_value
+FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
 ```
+
+Change `@v0.1.0` to move to a newer release. On stock DuckDB 2.0, install the
+extension from the Query.Farm repository instead (`SET allow_extension_repositories = 'allowed';
+CREATE EXTENSION REPOSITORY IF NOT EXISTS query_farm WITH PREFIX 'https://duckdb-extensions.query.farm';
+INSTALL vgi FROM query_farm; LOAD vgi FROM query_farm;`).
+
+### Other ways to run it
+
+- **Docker** (the image bundles the worker and its dependencies):
+
+  ```sql
+  ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-pysal:0.1.0');
+  ```
+
+- **From a local checkout** (`git clone https://github.com/Query-farm/vgi-pysal`), point `LOCATION` at `uv run --project /path/to/vgi-pysal vgi-pysal`.
+
+The package installs two console scripts: `vgi-pysal` (stdio, the one DuckDB
+spawns) and `vgi-pysal-http` (HTTP server).
+
+### Build from source
+
+To build the worker yourself, see [Local development](#local-development).
 
 ## Local development
 

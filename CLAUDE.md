@@ -44,8 +44,10 @@ point at `vgi_pysal.worker:main` / `:main_http` — *inside the package*, so the
 ship in the wheel. The repo-root `pysal_worker.py` / `serve.py` are thin shims
 for `uv run` / the Fly container / `import` in tests; they are deliberately NOT
 in the wheel. Don't point entry points at the root modules — that breaks console
-scripts on `pip install`. PyPI publish is `publish.yml` (GitHub Release → CI →
-`uv build && uv publish`); bump `version` in `pyproject.toml` before tagging.
+scripts on `pip install`. Workers are never published to PyPI: releases are
+GitHub tags (`vX.Y.Z`, installed via `uvx --from git+…@vX.Y.Z vgi-pysal`) plus the
+ghcr image from `docker-publish.yml`. Bump `__version__` in `vgi_pysal/__init__.py`
+before tagging (`ci/check-version.sh` verifies it).
 
 ## The one spatial-input convention (the core idea)
 
