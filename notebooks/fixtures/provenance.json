@@ -1,0 +1,7 @@
+{
+  "kind": "explicit synthetic computational input; no real sensor observations",
+  "construction": "25 points on a perturbed 5-by-5 planar grid: x=i%5+0.04*cos(i*sqrt(2)); y=i//5+0.06*sin(i*0.91); reading=10+2*x+1.5*y+1.3*sin(i*1.7)+3*(i==12); stored to six decimals",
+  "coordinate_units": "arbitrary planar distance units, not latitude/longitude",
+  "reading_units": "arbitrary units",
+  "sha256": "f8cb63c891401227f202832794be5b2ad1e8eb49c1126d36058f6dec6abb2b13"
+}

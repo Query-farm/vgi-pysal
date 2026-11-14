@@ -290,3 +290,7 @@ test/sql/*.test       DuckDB sqllogictest — the authoritative integration test
 MIT — see [LICENSE](LICENSE). Built on [PySAL](https://pysal.org) (libpysal,
 esda, spreg, mapclassify, inequality) and the
 [VGI](https://github.com/query-farm/vgi-python) framework.
+
+## Executed notebook
+
+[Neighbors change spatial autocorrelation](notebooks/README.md) audits KNN weights and reconstructs Moran’s I on explicit synthetic sensors, with a neighborhood-size experiment.
