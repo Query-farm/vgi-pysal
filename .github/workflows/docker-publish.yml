@@ -113,7 +113,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # haybarn 2.0 (the line whose vgi extension speaks protocol 3.2) is
+          # haybarn 2.0 (the line whose vgi extension speaks protocol 3.3) is
           # RC-only, so `gh release view` still returns 1.5: pick the newest 2.0 tag.
           REL=$(gh release list --repo Query-farm-haybarn/haybarn --limit 30 --json tagName \
             --jq '[.[].tagName | select(startswith("haybarn-v2.0"))][0]')
