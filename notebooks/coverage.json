@@ -1,0 +1,614 @@
+{
+  "schema_version": 1,
+  "catalogs": {
+    "released": {
+      "path": "coverage/catalog-release.json",
+      "sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+        "notes": "All 28 logical functions, zero relations/views, no authentication; registry writes retained. Public v0.1.0 and current source resolve to identical commit 127af2ac9894c2fd5556ec7db9dfb63f69b62761. Complete runtime exports and source identity evidence reconciled."
+      }
+    },
+    "current": {
+      "path": "coverage/catalog-current.json",
+      "sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+        "notes": "All 28 logical functions, zero relations/views, no authentication; registry writes retained. Public v0.1.0 and current source resolve to identical commit 127af2ac9894c2fd5556ec7db9dfb63f69b62761. Complete runtime exports and source identity evidence reconciled."
+      }
+    }
+  },
+  "notebooks": [
+    {
+      "path": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "sha256": "b938a280943d84f2d17d8336f6cef246746479830d97b87f23921eab836f19c3",
+      "execution": {
+        "path": "coverage/run-01.json",
+        "sha256": "cd185aa671a01b73512fad90cc54adea63232cd997fe89bad963596cd0eaf1ab"
+      }
+    },
+    {
+      "path": "02_classification_changes_the_map.ipynb",
+      "sha256": "5c52ec71d383f0830d281a2f8a786caf829138d71d8effff02030111cd1ab112",
+      "execution": {
+        "path": "coverage/run-02.json",
+        "sha256": "8f582a9c8915781f0e4bc089d604e7350e153214cf6557d45a981f3b2b5c0a7d"
+      }
+    },
+    {
+      "path": "03_the_population_defines_inequality.ipynb",
+      "sha256": "517da22635301ebab3b4342b392ff393a1fa6962dc7f8a87573e372ded6182f6",
+      "execution": {
+        "path": "coverage/run-03.json",
+        "sha256": "ed9b7f267ed7940fae8df280ee4d77013df9ecf79d01e90dfe952b202d931397"
+      }
+    },
+    {
+      "path": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+      "execution": {
+        "path": "coverage/run-04.json",
+        "sha256": "544dbecfdd5aa288e6cbde19fa0c5961a58dea0fc98e294a37d38d7b56368ad0"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "object": {
+        "schema": "main",
+        "name": "weights"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "sql": [
+        {
+          "cell": "graph-materialize",
+          "reference": "pysal.main.weights"
+        }
+      ],
+      "narrative_cells": [
+        "fae0cb7d",
+        "bfcadfdc"
+      ],
+      "result_cells": [
+        "e0d48df9"
+      ],
+      "interpretation_cells": [
+        "e0d48df9"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "b938a280943d84f2d17d8336f6cef246746479830d97b87f23921eab836f19c3",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Audit a directed nearest-neighbor graph against an independent SQL distance ranking.",
+        "finding": "25 fixed sensors produce 75 directed links, row sums one and seven nonreciprocal links at k=3; widening to six changes edges, not the underlying coordinates."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "weights_summary"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "sql": [
+        {
+          "cell": "graph-materialize",
+          "reference": "pysal.main.weights_summary"
+        }
+      ],
+      "narrative_cells": [
+        "bfcadfdc"
+      ],
+      "result_cells": [
+        "e0d48df9"
+      ],
+      "interpretation_cells": [
+        "e0d48df9"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "b938a280943d84f2d17d8336f6cef246746479830d97b87f23921eab836f19c3",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Separate absence of islands from graph connectivity.",
+        "finding": "Zero islands and one independently computed weak component; summary and full edges agree. Directed links remain directed in the statistic."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "moran"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "sql": [
+        {
+          "cell": "graph-materialize",
+          "reference": "pysal.main.moran"
+        }
+      ],
+      "narrative_cells": [
+        "f0846969",
+        "a0ee4d69"
+      ],
+      "result_cells": [
+        "670414a4"
+      ],
+      "interpretation_cells": [
+        "670414a4"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "b938a280943d84f2d17d8336f6cef246746479830d97b87f23921eab836f19c3",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Reconstruct global Moran I from the actual returned weights.",
+        "finding": "Worker and SQL both return 0.706687 at k=3; expectation -1/24 and smaller-tail permutation pseudo-p 0.002. Constructed readings do not support a real-world inference."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "columbus"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "sql": [
+        {
+          "cell": "data-query",
+          "reference": "pysal.main.columbus"
+        }
+      ],
+      "narrative_cells": [
+        "data-story"
+      ],
+      "result_cells": [
+        "data-finding"
+      ],
+      "interpretation_cells": [
+        "data-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "5c52ec71d383f0830d281a2f8a786caf829138d71d8effff02030111cd1ab112",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Establish a fixed historical population before classification.",
+        "finding": "49 unique IDs, known 1980 rates and polygons retained; geometry rendering does not change the source values."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "quantiles"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "sql": [
+        {
+          "cell": "class-query",
+          "reference": "pysal.main.quantiles"
+        }
+      ],
+      "narrative_cells": [
+        "class-story",
+        "map-story"
+      ],
+      "result_cells": [
+        "class-finding",
+        "population-chart",
+        "map-chart"
+      ],
+      "interpretation_cells": [
+        "class-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "5c52ec71d383f0830d281a2f8a786caf829138d71d8effff02030111cd1ab112",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Compare near-equal bin populations against other class rules.",
+        "finding": "Default counts are 13,12,12,12; colors represent ordinal membership and not common thresholds across methods."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "equal_interval"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "sql": [
+        {
+          "cell": "class-query",
+          "reference": "pysal.main.equal_interval"
+        }
+      ],
+      "narrative_cells": [
+        "class-story",
+        "map-story"
+      ],
+      "result_cells": [
+        "class-finding",
+        "population-chart",
+        "map-chart"
+      ],
+      "interpretation_cells": [
+        "class-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "5c52ec71d383f0830d281a2f8a786caf829138d71d8effff02030111cd1ab112",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Show how equal numeric bin widths differ from equal populations.",
+        "finding": "Default counts are 7,18,13,11 over unchanged 49 observations; table exposes actual upper bounds."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "fisher_jenks"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "sql": [
+        {
+          "cell": "class-query",
+          "reference": "pysal.main.fisher_jenks"
+        }
+      ],
+      "narrative_cells": [
+        "class-story",
+        "map-story"
+      ],
+      "result_cells": [
+        "class-finding",
+        "population-chart",
+        "map-chart"
+      ],
+      "interpretation_cells": [
+        "class-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "5c52ec71d383f0830d281a2f8a786caf829138d71d8effff02030111cd1ab112",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Compare within-class variation minimization on the same values.",
+        "finding": "Default counts 2,18,16,13; 18 of 49 observations differ in ordinal class across methods, without any source-value change."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "mexico"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "sql": [
+        {
+          "cell": "data-query",
+          "reference": "pysal.main.mexico"
+        }
+      ],
+      "narrative_cells": [
+        "population-story"
+      ],
+      "result_cells": [
+        "population-finding"
+      ],
+      "interpretation_cells": [
+        "population-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "517da22635301ebab3b4342b392ff393a1fa6962dc7f8a87573e372ded6182f6",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Keep an explicitly selected common state roster across two years.",
+        "finding": "32 complete states; removing Distrito Federal by its 2000 rank leaves the same 31 states in both years. State weights are equal, not population weights."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "gini"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "sql": [
+        {
+          "cell": "measure-query",
+          "reference": "pysal.main.gini"
+        }
+      ],
+      "narrative_cells": [
+        "measure-story"
+      ],
+      "result_cells": [
+        "measure-finding",
+        "measures-chart"
+      ],
+      "interpretation_cells": [
+        "measure-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "517da22635301ebab3b4342b392ff393a1fa6962dc7f8a87573e372ded6182f6",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Reconstruct a distribution summary independently and inspect roster sensitivity.",
+        "finding": "Full-roster Gini changes by -0.0956 from 1940 to 2000 and matches SQL pairwise differences; this is not household inequality."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "theil"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "sql": [
+        {
+          "cell": "measure-query",
+          "reference": "pysal.main.theil"
+        }
+      ],
+      "narrative_cells": [
+        "measure-story"
+      ],
+      "result_cells": [
+        "measure-finding",
+        "measures-chart"
+      ],
+      "interpretation_cells": [
+        "measure-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "517da22635301ebab3b4342b392ff393a1fa6962dc7f8a87573e372ded6182f6",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Compare a second normalized distribution summary on identical rows.",
+        "finding": "Full-roster Theil T is about 0.209 and 0.107; mean-normalized SQL logarithms reconstruct the aggregate. Both index changes depend on the observation roster."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "spreg"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "training-query",
+          "reference": "pysal.main.spreg"
+        }
+      ],
+      "narrative_cells": [
+        "training-story",
+        "scoring-story"
+      ],
+      "result_cells": [
+        "coefficient-finding",
+        "prediction-finding"
+      ],
+      "interpretation_cells": [
+        "coefficient-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Expose the OLS coefficient equation before scoring.",
+        "finding": "25 synthetic rows and three coefficients; IDs and coordinates have explicit roles, while feature_x and feature_y are predictors. Training fit is not held-out validation."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "fit"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "training-query",
+          "reference": "pysal.main.fit"
+        }
+      ],
+      "narrative_cells": [
+        "registry-story"
+      ],
+      "result_cells": [
+        "coefficient-finding",
+        "registry-finding"
+      ],
+      "interpretation_cells": [
+        "registry-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Persist one model in an isolated disposable registry.",
+        "finding": "The fit returns OLS metadata for exactly 25 rows and two explanatory features; subsequent list/lookup and prediction use notebook_ols."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "list_models"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "registry-query",
+          "reference": "pysal.main.list_models"
+        }
+      ],
+      "narrative_cells": [
+        "registry-story",
+        "check-story"
+      ],
+      "result_cells": [
+        "registry-finding",
+        "delete-finding"
+      ],
+      "interpretation_cells": [
+        "registry-finding",
+        "delete-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Observe registry membership before and after deletion.",
+        "finding": "Exactly one isolated model is listed before scoring, then none after deletion; existing user registries are not touched."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "model_info"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "registry-query",
+          "reference": "pysal.main.model_info"
+        }
+      ],
+      "narrative_cells": [
+        "registry-story"
+      ],
+      "result_cells": [
+        "registry-finding",
+        "delete-finding"
+      ],
+      "interpretation_cells": [
+        "registry-finding",
+        "delete-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Check named-model identity and scope before prediction.",
+        "finding": "Lookup confirms OLS, 25 training rows and feature order; absent lookup after deletion verifies removal."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "predict"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "prediction-query",
+          "reference": "pysal.main.predict"
+        }
+      ],
+      "narrative_cells": [
+        "scoring-story"
+      ],
+      "result_cells": [
+        "prediction-finding",
+        "change-chart"
+      ],
+      "interpretation_cells": [
+        "prediction-finding",
+        "check-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Compare original and changed features using fixed stored coefficients.",
+        "finding": "Predictions match independent SQL equations; scale=1 leaves zero differences and scale=1.5 changes only the x term. Original training RMSE is 1.2063, not a scenario forecast score."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "drop_model"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "sql": [
+        {
+          "cell": "delete-query",
+          "reference": "pysal.main.drop_model"
+        }
+      ],
+      "narrative_cells": [
+        "check-story"
+      ],
+      "result_cells": [
+        "delete-finding"
+      ],
+      "interpretation_cells": [
+        "delete-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-11-15T01:53:06.273451+00:00",
+        "notebook_sha256": "434c26174489825255193be71d6c063b059c5b77259166bac0d140d472a9a68f",
+        "catalog_sha256": [
+          "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+        ],
+        "purpose": "Complete the isolated named-model lifecycle.",
+        "finding": "Deletion returns true and both subsequent name lookup and registry listing are empty. Materialized earlier predictions remain available."
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "release_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+  "current_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+  "reviewed_at": "2026-11-15T01:48:27.146624+00:00",
+  "reviewer": "Codex /root",
+  "notes": "Public main at authoring and v0.1.0 resolve to the identical commit. Actual released-runtime exports therefore cover this exact current revision. All 28 functions included; zero tables/views, no authentication. fit and drop_model write to the local model registry and remain in the denominator. No builds or worker source changes.",
+  "source_sha256": {
+    "pyproject.toml": "8bc26f4f227bc9fbf0458ad27e5da22b01fb3208f6c2c5e0f290815c3275a415",
+    "pysal_worker.py": "4f73792c5890ffe7339836f619aa8f37acbe7b276ebe317eccc385517dabb183",
+    "uv.lock": "cc88630d1c65bf04f044834058a838cac7d05bb6ebbbd996d6a608c16676ef3f",
+    "vgi_pysal/__init__.py": "cd244ae3c0a708f97daad43da3f49f6a3ab150b075675ba0feb9a29b06dce0a1",
+    "vgi_pysal/buffering.py": "5ce4248ec13a74e356bd3950397a3f577b39defef9a9bec33674dc344ed3e108",
+    "vgi_pysal/classify.py": "ed5f89bfb34231118a00ca3e29f4286b2f680180f33a4012416bad00c7b76430",
+    "vgi_pysal/datasets.py": "c3873032257d85990743634d36da76f9ffbe5bf7fb63f6a91ebfaf08cc511681",
+    "vgi_pysal/esda.py": "fbbd1fa0d39c7128b469125d9a856fb361b8d7bf3c5a28995a7ffc9c398167f4",
+    "vgi_pysal/examples.py": "caead783103b4cf6a0e022740f2344cfa4e0f733769f31c77e8bf73bceeb0f0c",
+    "vgi_pysal/geometry.py": "d6e7654915dd1b97144e2af09a9667e8f88b44f87aaeb0d8d60aff1e67e28da2",
+    "vgi_pysal/inequality.py": "d4d64e245ae8f2a26874829a564dc24dd6896b2caad41cf9573828c783c8557e",
+    "vgi_pysal/lisa.py": "61ae0163e31aa29a002ec42e48a0ec8db0bd338f21e43079412dbaab730dcb85",
+    "vgi_pysal/registry.py": "e33f55e64f71baeead974d179fdc88a95d3deb4db7f1fc54e99998b7a1cc1da2",
+    "vgi_pysal/regression.py": "e1c143a1f4401b130587a0ffa4dcade4c9b5fc50e635d7c47eb0e8a5de0cc18e",
+    "vgi_pysal/schema_utils.py": "a0b0bb2a363b50f5faa37e37ad6020d4ad98bc801f304156a858816cdf05f87c",
+    "vgi_pysal/spatial_weights.py": "79eb3c6036cbf40858303e8ef3b8421bf7da8461b2de5cdae88f7c9917d57639",
+    "vgi_pysal/worker.py": "2979459b61c4032aa006c7630dc3d6ee0e304858a10d7123ce9a066a2b650f9b"
+  }
+}

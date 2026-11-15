@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "notebook_sha256": "b938a280943d84f2d17d8336f6cef246746479830d97b87f23921eab836f19c3",
+  "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+  "worker_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+  "status": "success",
+  "executed_at": "2026-11-15T01:52:56.443424+00:00",
+  "engine": "Haybarn 2.0.0rc11 / public PySAL v0.1.0 via uvx Python 3.13 / shared 0.3.50",
+  "command": "uv run --locked vgi-notebooks --timeout 300",
+  "catalog_aliases": [
+    "pysal"
+  ],
+  "cells": [
+    {
+      "id": "06cf5cec",
+      "status": "success",
+      "execution_count": 1,
+      "source_sha256": "82cc55f8d9c4bee3d371e933ad3594dfe7e71e6527f6744edf4e8ffa5240b672",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "bootstrap",
+      "status": "success",
+      "execution_count": 2,
+      "source_sha256": "993543fbd354db3ff0c63724d46c74c53d866878f2f9fc3a8db543b35a33ec13",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "ad34a20a",
+      "status": "success",
+      "execution_count": 3,
+      "source_sha256": "9042c6912db868323e16f329f4beb5fb929732af75a5d5942d844404f3da5b30",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "dafe8afc",
+      "status": "success",
+      "execution_count": 4,
+      "source_sha256": "21f7a43ecc4ffa4ed052c89a34e502ab1c53864ea4ba08f8421ac66300d22468",
+      "outputs_sha256": "c17c19a5c176854762c97c96bafef62f247262c382ecc6533cf998819c105960"
+    },
+    {
+      "id": "graph-materialize",
+      "status": "success",
+      "execution_count": 5,
+      "source_sha256": "e3ba80832762e384eef2c140429e2f824129d20d1e90c1ccbfc36a5c9caf35c2",
+      "outputs_sha256": "23c8940505861b0952ea3eeab2c75a52fa17ba150448cdb4800ec9653ee5050b"
+    },
+    {
+      "id": "e558b0aa",
+      "status": "success",
+      "execution_count": 6,
+      "source_sha256": "a4ad5f5f6de76c281eb771c242b14e1c18e30dd1f6825711a73374469211e216",
+      "outputs_sha256": "fd5adb1dbe4492795ec2183fad28c6e3cd2f38539aac3d490c5b1464777bf5b3"
+    },
+    {
+      "id": "907f88d0",
+      "status": "success",
+      "execution_count": 7,
+      "source_sha256": "f692a3c5e94fb3815580eab91790e74e1350c0f72a7568f7fb3b1687700bf0ff",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "44cc1f84",
+      "status": "success",
+      "execution_count": 8,
+      "source_sha256": "e14e13cedb9397cb5f8803188db21de04db6f6c6985dfcb36cab7c425d568de5",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "e0d48df9",
+      "status": "success",
+      "execution_count": 9,
+      "source_sha256": "6e44a2e1341a7a7da74a6f3810f37812bc2157a2288d76f18b9d60274f41b387",
+      "outputs_sha256": "ebf1e09bd548d705e58a6d252796d5c55ffb8961506f7cfa41a90aecc7864371"
+    },
+    {
+      "id": "41a02d7d",
+      "status": "success",
+      "execution_count": 10,
+      "source_sha256": "d6a100aab0fe123ae67727ce1583101a211c19f91ad154abea74596a6607005e",
+      "outputs_sha256": "5bd2e32b8da421423a3de9177c238d6e1764ee417af110c4bd906f33b3869ac9"
+    },
+    {
+      "id": "bcadb6a0",
+      "status": "success",
+      "execution_count": 11,
+      "source_sha256": "7b6251760f2bbbe3bc21f0b4f736a892ec8dfc733b0da8faf3ecd5103d129a53",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "670414a4",
+      "status": "success",
+      "execution_count": 12,
+      "source_sha256": "4964d38c47a1444ca0d7f0b6ff10edfcf3aa7754ca397a3f97147de0af8b8a00",
+      "outputs_sha256": "0316e2129a1bab5687cb5d073ba2c46ae3d54eeaea3646cf39bd40a2a9734b43"
+    },
+    {
+      "id": "30b1db88",
+      "status": "success",
+      "execution_count": 13,
+      "source_sha256": "93ec0f9117cc5bf4f33fee401fed4cf9e86df0394e4a0b88e2a36b5c7db98d28",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ]
+}

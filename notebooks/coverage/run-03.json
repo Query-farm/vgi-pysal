@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "notebook_sha256": "517da22635301ebab3b4342b392ff393a1fa6962dc7f8a87573e372ded6182f6",
+  "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+  "worker_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+  "status": "success",
+  "executed_at": "2026-11-15T01:52:56.443424+00:00",
+  "engine": "Haybarn 2.0.0rc11 / public PySAL v0.1.0 via uvx Python 3.13 / shared 0.3.50",
+  "command": "uv run --locked vgi-notebooks --timeout 300",
+  "catalog_aliases": [
+    "pysal"
+  ],
+  "cells": [
+    {
+      "id": "parameters",
+      "status": "success",
+      "execution_count": 1,
+      "source_sha256": "a99ef8c2695ff01505ee8f6a8b986407f12055791d11b765dc01d7389dcadb5b",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "bootstrap",
+      "status": "success",
+      "execution_count": 2,
+      "source_sha256": "993543fbd354db3ff0c63724d46c74c53d866878f2f9fc3a8db543b35a33ec13",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "setup",
+      "status": "success",
+      "execution_count": 3,
+      "source_sha256": "c59b73a36c09bb49218442e17c5748437d9a98184d9df7e9bc76801531666bff",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "attach",
+      "status": "success",
+      "execution_count": 4,
+      "source_sha256": "21f7a43ecc4ffa4ed052c89a34e502ab1c53864ea4ba08f8421ac66300d22468",
+      "outputs_sha256": "c17c19a5c176854762c97c96bafef62f247262c382ecc6533cf998819c105960"
+    },
+    {
+      "id": "data-query",
+      "status": "success",
+      "execution_count": 5,
+      "source_sha256": "0e568309ccb7b8f832afd0882569ed5d964c24fa967641cbb428521335f54214",
+      "outputs_sha256": "23c8940505861b0952ea3eeab2c75a52fa17ba150448cdb4800ec9653ee5050b"
+    },
+    {
+      "id": "population-finding",
+      "status": "success",
+      "execution_count": 6,
+      "source_sha256": "91ef8effd868f66a2321ec7d3eb15ba29fc1d68ce0f694a57ef205e7371ad1e7",
+      "outputs_sha256": "abbe1c27a8441f5ec99ae9b4d1c9fb52106ba1c3c600069fed3de73c9aa8630c"
+    },
+    {
+      "id": "measure-query",
+      "status": "success",
+      "execution_count": 7,
+      "source_sha256": "dcf22e2b63fed5f3885f025db79bfa936f06afac90956ea6bae348fd6e207e6e",
+      "outputs_sha256": "0bdc70aa33fe0453d3da152a6e09aef75ace8b5874e2d8bc69f07ec3ee82fd31"
+    },
+    {
+      "id": "measure-display-query",
+      "status": "success",
+      "execution_count": 8,
+      "source_sha256": "355f747e40c516a4d2d3d428ca0dc7d1117315cd3a50d7c640b5e0dde71648e8",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "measure-finding",
+      "status": "success",
+      "execution_count": 9,
+      "source_sha256": "87d925f37355e1ff4302dac01b60af9ca6f9892a1d4ee0874b6a04bcf4d8731e",
+      "outputs_sha256": "c4487c105813e1055bc65d9243f749e12c4b489e96ff8e72a74cbea9223f383b"
+    },
+    {
+      "id": "measures-chart",
+      "status": "success",
+      "execution_count": 10,
+      "source_sha256": "f0eedf50197431ba1b071e926fcee758657c512df2a5362b4903fb1307103c0f",
+      "outputs_sha256": "9586b42e5e55862b06cf1b7aa733aa2c71ff0bb7a81f6098f8b9f02b1e463bbd"
+    },
+    {
+      "id": "lorenz-query",
+      "status": "success",
+      "execution_count": 11,
+      "source_sha256": "3f1a8dafb4158822bdadbda49d1a4d01a1826a0223158a188927c60b5f1db186",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "lorenz-chart",
+      "status": "success",
+      "execution_count": 12,
+      "source_sha256": "7faf2c9d93b70afb39d8f38ff7ee0d424b6a6f1d1becaa738c6794b0e7e3f1d7",
+      "outputs_sha256": "a0089c5b5d3a5aee70266d50600c76426779aa3b46e7a8844b6c458726721817"
+    },
+    {
+      "id": "checks",
+      "status": "success",
+      "execution_count": 13,
+      "source_sha256": "451e8814bd7e172fbcbc41f49a4f2dc5d725d18666232d6b21c540a847620a0d",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "id": "check-finding",
+      "status": "success",
+      "execution_count": 14,
+      "source_sha256": "91932afa14a9d3c5c33448fc11ef16a210f73459123ae10f4d3f7386706febbc",
+      "outputs_sha256": "ebe4b2e34d114f7265f6fdee3998069b7c282ac4e41ba73db38e118e2aef6b2d"
+    },
+    {
+      "id": "cleanup",
+      "status": "success",
+      "execution_count": 15,
+      "source_sha256": "93ec0f9117cc5bf4f33fee401fed4cf9e86df0394e4a0b88e2a36b5c7db98d28",
+      "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ]
+}

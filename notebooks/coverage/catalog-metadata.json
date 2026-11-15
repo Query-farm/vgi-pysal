@@ -1,0 +1,42 @@
+{
+  "query": "SELECT * FROM duckdb_databases() WHERE database_name='pysal'",
+  "columns": [
+    "database_name",
+    "database_oid",
+    "path",
+    "comment",
+    "tags",
+    "internal",
+    "type",
+    "readonly",
+    "encrypted",
+    "cipher",
+    "options"
+  ],
+  "rows": [
+    [
+      "pysal",
+      22595,
+      null,
+      "PySAL spatial statistics for SQL: datasets, weights, autocorrelation, classification, and regression.",
+      {
+        "vgi.agent_test_tasks": "[{\"name\": \"mexico_highest_neighbour_gdp\", \"prompt\": \"Using queen-contiguity spatial weights between the Mexican states in the built-in mexico dataset (row-standardised, the default transform), compute each state's spatial lag of 2000 per-capita GDP (pcgdp2000) \\u2014 the weighted average over its neighbours. Which state has the highest spatial lag? Return one column: the state name.\"}, {\"name\": \"columbus_hot_spot_house_value\", \"prompt\": \"Run a Getis-Ord G_i* hot-spot analysis of crime on the built-in columbus neighbourhoods using 8-nearest-neighbour weights. How many neighbourhoods does the worker label as crime hot spots, and what is their average house value (hoval)? Return two columns: the hot-spot count (integer) and the average house value rounded to 1 decimal place.\"}]",
+        "vgi.author": "Query.Farm",
+        "vgi.copyright": "Copyright 2026 Query Farm LLC",
+        "vgi.license": "MIT",
+        "vgi.subtitle": "Spatial weights, autocorrelation tests, map classification, inequality measures, and spatial regression from PySAL, callable from SQL.",
+        "vgi.title": "PySAL Spatial Analysis",
+        "vgi_resolved_data_version": "0.1.0",
+        "vgi_resolved_implementation_version": "unknown"
+      },
+      false,
+      "vgi",
+      false,
+      false,
+      null,
+      {
+        "location": "uvx --python 3.13 --from git+https://github.com/Query-farm/vgi-pysal@v0.1.0 vgi-pysal"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,1698 @@
+{
+  "schema_version": 1,
+  "status": "met",
+  "meets_target": true,
+  "catalogs": {
+    "released": {
+      "catalog_status": "verified",
+      "revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+      "collection_reconciled": true,
+      "denominator": 28,
+      "observed_objects": 28,
+      "required": 14,
+      "verified_count": 16,
+      "candidate_count": 0,
+      "fraction": 0.5714285714285714,
+      "meets_target": true,
+      "exact_runtime_count": 16,
+      "runtime_revisions": [
+        "127af2ac9894c2fd5556ec7db9dfb63f69b62761"
+      ],
+      "covered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "columbus"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "drop_model"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "equal_interval"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fisher_jenks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fit"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "gini"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "list_models"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "mexico"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "model_info"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "moran"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "predict"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "quantiles"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "spreg"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "theil"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights_summary"
+        }
+      ],
+      "uncovered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "baltim"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "box_plot"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "geary"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "georgia"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g_local"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "head_tail_breaks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "local_moran"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "natural_breaks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "sids"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "std_mean"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "us_states"
+        }
+      ],
+      "objects": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "baltim",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "box_plot",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "columbus",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "drop_model",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(VARCHAR) -> None"
+          ],
+          "access": [
+            "write"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "equal_interval",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fisher_jenks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fit",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "write"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "geary",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "georgia",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g_local",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, DOUBLE, VARCHAR, BOOLEAN, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, BIGINT, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "gini",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "aggregate(DOUBLE) -> DOUBLE"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "head_tail_breaks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "list_models",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "local_moran",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "mexico",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "model_info",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "moran",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "natural_breaks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "predict",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BLOB, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "quantiles",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "sids",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "spreg",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "std_mean",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "theil",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "aggregate(DOUBLE) -> DOUBLE"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "us_states",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights_summary",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        }
+      ],
+      "issues": []
+    },
+    "current": {
+      "catalog_status": "verified",
+      "revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73",
+      "collection_reconciled": true,
+      "denominator": 28,
+      "observed_objects": 28,
+      "required": 14,
+      "verified_count": 16,
+      "candidate_count": 0,
+      "fraction": 0.5714285714285714,
+      "meets_target": true,
+      "exact_runtime_count": 16,
+      "runtime_revisions": [
+        "127af2ac9894c2fd5556ec7db9dfb63f69b62761"
+      ],
+      "covered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "columbus"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "drop_model"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "equal_interval"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fisher_jenks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fit"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "gini"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "list_models"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "mexico"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "model_info"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "moran"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "predict"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "quantiles"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "spreg"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "theil"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights_summary"
+        }
+      ],
+      "uncovered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "baltim"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "box_plot"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "geary"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "georgia"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g_local"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "head_tail_breaks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "local_moran"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "natural_breaks"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "sids"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "std_mean"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "us_states"
+        }
+      ],
+      "objects": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "baltim",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "box_plot",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "columbus",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "drop_model",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(VARCHAR) -> None"
+          ],
+          "access": [
+            "write"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "equal_interval",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fisher_jenks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fit",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "write"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "geary",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "georgia",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "getis_ord_g_local",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, DOUBLE, VARCHAR, BOOLEAN, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, BIGINT, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "gini",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "aggregate(DOUBLE) -> DOUBLE"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "head_tail_breaks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "list_models",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "local_moran",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "mexico",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "model_info",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "moran",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "natural_breaks",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "predict",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BLOB, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "quantiles",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "sids",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "spreg",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "std_mean",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "theil",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "aggregate(DOUBLE) -> DOUBLE"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "us_states",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table() -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "weights_summary",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        }
+      ],
+      "issues": []
+    }
+  },
+  "interface_drift": {
+    "known": true,
+    "current_only": [],
+    "released_only": [],
+    "changed": []
+  },
+  "notebooks": {
+    "01_neighbors_change_spatial_autocorrelation.ipynb": {
+      "verified": true,
+      "issues": []
+    },
+    "02_classification_changes_the_map.ipynb": {
+      "verified": true,
+      "issues": []
+    },
+    "03_the_population_defines_inequality.ipynb": {
+      "verified": true,
+      "issues": []
+    },
+    "04_a_saved_model_has_a_lifecycle.ipynb": {
+      "verified": true,
+      "issues": []
+    }
+  },
+  "examples": [
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "weights"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "weights_summary"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "moran"
+      },
+      "notebook": "01_neighbors_change_spatial_autocorrelation.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "columbus"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "quantiles"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "equal_interval"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "fisher_jenks"
+      },
+      "notebook": "02_classification_changes_the_map.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "mexico"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "gini"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "theil"
+      },
+      "notebook": "03_the_population_defines_inequality.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "spreg"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "fit"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "list_models"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "model_info"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "predict"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "drop_model"
+      },
+      "notebook": "04_a_saved_model_has_a_lifecycle.ipynb",
+      "runtime_revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+      "runtime_catalog_sha256": "7eca12dc00904943b84154b6b3b9c40b6f108ee36c8d3abfcbf949a777e2dc73"
+    }
+  ],
+  "issues": []
+}

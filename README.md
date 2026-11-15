@@ -345,6 +345,8 @@ MIT — see [LICENSE](LICENSE). Built on [PySAL](https://pysal.org) (libpysal,
 esda, spreg, mapclassify, inequality) and the
 [VGI](https://github.com/query-farm/vgi-python) framework.
 
-## Executed notebook
+## Executed notebooks
 
-[Neighbors change spatial autocorrelation](notebooks/README.md) audits KNN weights and reconstructs Moran’s I on explicit synthetic sensors, with a neighborhood-size experiment.
+[Four SQL stories](notebooks/README.md) explore neighborhood graphs and Moran’s I,
+map classification, distribution summaries, and a saved-model lifecycle. Each has
+executed SVG charts, a parameter experiment, and an Open in Colab link.

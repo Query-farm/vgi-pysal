@@ -1,123 +1,109 @@
-# PySAL notebooks
+# PySAL Spatial Analysis notebooks
 
-[01 · Neighbors change spatial autocorrelation](01_neighbors_change_spatial_autocorrelation.ipynb)
-uses 25 explicitly synthetic sensor locations and readings to examine neighborhood
-sensitivity. It audits directed KNN weights, checks them independently against SQL
-distances, and reconstructs Moran's I from the returned graph. The end experiment
-changes three neighbors to six while holding the input and permutation settings fixed.
+Four executed SQL stories use the public **v0.1.0** release through Haybarn.
+Each notebook has an Open in Colab link, visible connection SQL, saved SVG figures,
+and an experiment that changes one parameter while keeping source values fixed.
 
-## Run from this directory alone
+| Notebook | Question | Experiment |
+| --- | --- | --- |
+| [Neighbors change spatial autocorrelation](01_neighbors_change_spatial_autocorrelation.ipynb) | Do the returned graph and Moran’s I agree with independent SQL calculations? | `K_NEIGHBORS`: 3 → 6 |
+| [Classification changes the map](02_classification_changes_the_map.ipynb) | How do quantiles, equal intervals and Fisher–Jenks classify the same historical rates? | `CLASS_COUNT`: 4 → 6 |
+| [The population defines inequality](03_the_population_defines_inequality.ipynb) | What changes when the same state is excluded from both years of a distribution comparison? | `EXCLUDE_TOP_2000`: False → True |
+| [A saved model has a lifecycle](04_a_saved_model_has_a_lifecycle.ipynb) | Can a stored OLS model’s predictions and deletion be audited explicitly? | `SCORING_SCALE`: 1.0 → 1.5 |
 
-Install [uv](https://docs.astral.sh/uv/) and Git:
+## Run
+
+In Colab, open the badge and choose **Run all**. The first setup cell installs the
+shared base package while preserving compatible preloaded notebook libraries.
+The worker runs in a separate uv environment. Initial execution needs network
+access for packages, extension installation and verified example files. The actual
+calculations use bundled teaching data and a stored synthetic fixture; no account
+or API credentials are needed. The map notebook also installs DuckDB’s spatial extension.
+
+For local execution, install uv and Git, then run from this directory:
 
 ```sh
-cd notebooks
 uv sync --locked
-uv run --locked python execute.py
-uv run --locked python -m ipykernel install --user --name vgi-pysal-notebooks --display-name 'Python (vgi-pysal notebooks)'
+uv run --locked vgi-notebooks --timeout 300
+uv run --locked python -m ipykernel install --user --name vgi-pysal-notebooks --display-name 'Python (PySAL examples)'
 ```
 
-Select that kernel in Jupyter and start it in this directory. Python 3.13/3.14 is
-supported for the notebook; the worker launch requests Python 3.14 through uv.
-Initial setup downloads the locked notebook packages, VGI extension, immutable Git
-worker and scientific dependencies. No source checkout, root .venv or worker build
-is required. The tested platform is macOS ARM64, Haybarn 2.0.0rc11. Computation uses
-only the stored synthetic CSV; there is no replay/live API mode.
-
-The expanded SQL is literal and portable:
+The visible connection uses the release tag, without a local source path or a list
+of transitive dependency overrides:
 
 ```sql
 INSTALL vgi FROM community;
 LOAD vgi;
 ATTACH 'pysal' (
- TYPE vgi,
- LOCATION 'uvx --python 3.14 --from git+https://github.com/Query-farm/vgi-pysal.git@b3ef7feed7e55d3b223cce73f417843bcd3caf24 --constraints worker-constraints.txt vgi-pysal'
+  TYPE vgi,
+  LOCATION 'uvx --python 3.13 --from git+https://github.com/Query-farm/vgi-pysal@v0.1.0 vgi-pysal'
 );
 ```
 
-The repository has no published release and PyPI `vgi-pysal` returned 404 during
-validation. This launch uses the published Git revision instead. `uvx` caches the
-installation. `worker-constraints.txt` pins tested numerical dependencies, including
-libpysal 4.14.1, esda 2.10.0, NumPy 2.5.0 and SciPy 1.18.0, plus SDK 0.51.0 and
-RPC 0.53.1. The unchanged root lock uses SDK 0.50.0/protocol 3.2; the published
-notebook engine requires protocol 3.3. The notebook-only SDK pin resolves that
-compatibility issue; no root dependency files are changed.
+The local environment uses the shared package’s `[runner]` extra. Colab installs
+only the base package. Presentation, bootstrap and execution tools come from
+[vgi-example-notebooks v0.3.50](https://github.com/Query-farm/vgi-example-notebooks/tree/v0.3.50);
+the [shared standard](https://github.com/Query-farm/vgi-example-notebooks/blob/main/docs/standard.md)
+and [coverage specification](https://github.com/Query-farm/vgi-example-notebooks/blob/main/docs/coverage.md)
+are maintained there. GitHub does not honor notebook cell-folding metadata; setup
+is kept separate from the visible connection and analytical SQL.
 
-The worker imports Matplotlib indirectly through mapclassify. Setup sets the
-subprocess's `MPLBACKEND=Agg` after configuring this notebook's inline backend,
-then restores the prior environment value at cleanup. This prevents the worker
-from trying to import a notebook-only backend. To upgrade, change the literal Git
-revision and constraints, then revalidate both executions and source SQL suites.
+## Inputs and interpretation
 
-## Synthetic provenance and interpretation
+Books 1 and 4 retain the original `fixtures/sensors.csv` and its provenance/hash.
+These 25 invented points form a perturbed planar grid with a deliberate reading
+gradient, deterministic variation and central bump. Units are arbitrary; they are
+not real sensors or geographic coordinates. Directed KNN edges can be asymmetric.
+The first book checks the full edge set, outgoing sums, weak connectivity and an
+independent reconstruction of Moran’s I. Its permutation value is the tested esda
+implementation’s smaller-tail pseudo-p, not a doubled two-sided p-value.
 
-`fixtures/sensors.csv` stores a perturbed 5×5 grid. The reading is a deliberate
-planar gradient plus deterministic variation and a central bump. The exact formula,
-arbitrary units and SHA256 are in `fixtures/provenance.json`; the notebook verifies
-the hash before execution. These are not measurements, geographic coordinates or
-evidence about a real population. Coordinates are Euclidean planar units, not
-latitude/longitude. No data were collected from sensors or external APIs.
+Book 2 uses libpysal’s 49-area Columbus teaching dataset from 1980. The stored rate
+combines residential burglary and vehicle theft per 1,000 households. All three
+maps retain the same geometry and values; equal ordinal colors across panels do
+not mean equal numeric thresholds. These are historical data, not current crime rates.
 
-KNN is directed and can be asymmetric. The graph uses explicit sensor IDs and a
-stable row order. Every outgoing row is standardized to one; no islands alone does
-not imply connectivity, so SQL counts weak components too. An independent distance
-ranking checks the full neighbor set and rejects equal-distance ties in this input.
-The worker buffers all rows, so this example is deliberately small.
+Book 3 uses the bundled Mexico state per-capita values for 1940 and 2000. Both years
+use the same selected roster and equal weights per state. Gini and Theil T are
+reconstructed independently in SQL. The Lorenz curve accumulates state per-capita
+values; it does not estimate household inequality or population-weighted national GDP.
 
-The second chart plots reading z-scores against weighted neighbor means. Its line
-is `I × z` through the origin, not a predictive fit. Quadrant signs are not locally
-significant clusters. SQL independently reconstructs the worker's statistic.
+Book 4 explicitly separates IDs, coordinates, target and predictor columns. A named
+OLS model is written to an isolated temporary directory, inspected, used for two
+scoring scenarios and deleted. SQL reconstructs every predicted value and change.
+Training RMSE is not held-out validation, and changed features are not newly observed
+outcomes or causal interventions. Existing user models are never accessed.
 
-The pinned esda implementation returns a smaller-tail permutation pseudo-p:
-`(min(number >= observed I, number < observed I) + 1)/(permutations + 1)`.
-This is not a doubled two-sided p-value, a local test, or a probability that the
-null is true. The values are globally permuted over a fixed graph; the reference
-assumes exchangeability under spatial randomness. The constructed gradient makes
-this a demonstration of computation, not substantive inference. Reproducibility
-requires the seed and numerical runtime, as well as the inputs, to stay fixed.
+The tested release environment used libpysal 4.15.1, esda 2.10.0, mapclassify 2.11.0,
+spreg 1.9.2, NumPy 2.5.4 and SciPy 1.18.1. The release declares dependency ranges;
+its Git tag alone does not freeze future transitive resolution. Setup uses a headless
+backend for the worker, restores previous environment values, and removes the
+temporary model directory at cleanup.
 
-References: [KNN](https://pysal.org/libpysal/v4.14.1/generated/libpysal.weights.KNN.html),
-[Moran](https://pysal.org/esda/v2.9.0/generated/esda.Moran.html). The precise pseudo-p
-formula above was checked against the installed esda 2.10.0 source.
+## Experiments and validation
 
-## One-parameter experiment
+Parameter overrides must write into a separate output directory:
 
 ```sh
-uv run --locked python execute.py --parameters '{"K_NEIGHBORS":6}' --output-dir validation/k-6
+uv run --locked vgi-notebooks 01_neighbors_change_spatial_autocorrelation.ipynb --parameters '{"K_NEIGHBORS":6}' --output-dir artifacts/neighbors-six
+uv run --locked vgi-notebooks 02_classification_changes_the_map.ipynb --parameters '{"CLASS_COUNT":6}' --output-dir artifacts/classes-six
+uv run --locked vgi-notebooks 03_the_population_defines_inequality.ipynb --parameters '{"EXCLUDE_TOP_2000":true}' --output-dir artifacts/exclude-top
+uv run --locked vgi-notebooks 04_a_saved_model_has_a_lifecycle.ipynb --parameters '{"SCORING_SCALE":1.5}' --output-dir artifacts/scaled-features
 ```
 
-Keep `PERMUTATIONS=499` and `SEED=1729` fixed. Compare the focal arrows, neighbor
-table, directed link counts, scatterplot and Moran's I. The CSV hash, input
-fingerprint, readings and color scale must stay unchanged. Restore `K_NEIGHBORS=3`
-afterwards. Increasing k does not guarantee a smaller I in every dataset.
+All four defaults and experiments were executed with the released worker. Saved
+notebooks include eight SVG figures and numerical assertions. A fresh notebook-only
+run with preloaded pandas 2.2.3, Matplotlib 3.10.0, IPython 8.30.0, ipykernel 6.17.1
+and jupyter-client 7.4.9 retained those versions and passed `pip check`; this is a
+local compatibility test, not a manual hosted-Colab run.
 
-The runner uses a fresh kernel and atomically replaces saved outputs only after
-success. Parameter overrides require a separate destination; unknown names are
-rejected. Experiment copies include the relative assets, fixtures, constraints,
-locked notebook environment and documentation. `artifacts/` and `validation/` are
-ignored; the main notebook's successful embedded outputs are committed.
+The original graph story’s displayed analytical tables and fixture bytes are retained.
+The complete catalog has 28 public functions, including model-registry writes;
+these examples explain and execute 16. Release v0.1.0 and public main at authoring
+resolve to the same source commit, so coverage applies to that exact revision.
+Hash-bound catalogs and successful execution receipts are in `coverage.json` and
+`coverage/`. Existing green [source CI](https://github.com/Query-farm/vgi-pysal/actions/runs/43615920989)
+was reused; no worker source or root dependency files were modified.
 
-## Source validation and baseline issues
-
-The unchanged source passes 69 unit tests with its locked runtime and again with
-the notebook's SDK/Arrow override. Ruff lint/format and strict mypy pass. The
-Makefile's in-environment pydoclint crashes because `docstring-parser-fork` and
-`docstring-parser` overlap (`DocstringYields` import error). The repository CI
-already specifies isolated `uvx pydoclint==0.8.7`; that documented route passes.
-
-The original SDK 0.50.0 stdio SQL suite fails the protocol 3.2/3.3 handshake.
-The immutable Git worker with the notebook constraints passes the authoritative
-112 stdio SQL assertions in eight cases, plus 128 HTTP assertions in eight cases
-(including explicit httpfs install/load prerequisites in the staged tests). The
-stock preprocessing initially skipped the HTTP suite because httpfs was not loaded;
-validation disables ignored-error skips and explicitly loads it. Arrow 24.0.0 is
-retained from the source lock, and strict mypy also passes under the SDK override.
-Source and root locks remain unchanged.
-
-`vgi-lint-check==2.5.0 --fail-on error` reports 22/100 and exits 2: 18 errors,
-154 warnings and two informational findings. Errors include missing agent tasks
-(VGI152), undeclared argument choices (VGI317), missing executable examples
-(VGI509), eight example-binding failures (VGI901), and five first-row latency
-findings (VGI911). These are source metadata/example baseline findings; this
-notebook does not edit worker functionality or metadata. See [STANDARD.md](STANDARD.md)
-for notebook conventions.
+[Worker repository](https://github.com/Query-farm/vgi-pysal) ·
+[Query.Farm](https://query.farm/) · [VGI](https://query.farm/vgi/)

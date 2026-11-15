@@ -1,22 +1,12 @@
 [project]
 name = "vgi-pysal-notebooks"
 version = "0.1.0"
-description = "Neighborhood sensitivity of spatial autocorrelation"
+description = "Spatial graphs, classification, distribution summaries and model lifecycle"
 requires-python = ">=3.13,<3.15"
-dependencies = [
-    "haybarn==2.0.0rc11",
-    "ipykernel>=6.30,<8",
-    "jupysql>=0.11,<0.12",
-    "matplotlib>=3.10,<4",
-    "nbclient>=0.10,<0.11",
-    "nbformat>=5.10,<6",
-    "pandas>=2.2,<3",
-    "seaborn>=0.13.2,<0.14",
-    "toml>=0.10,<0.11",
-]
+dependencies = ["vgi-example-notebooks[runner] @ git+https://github.com/Query-farm/vgi-example-notebooks@v0.3.50"]
 
 [tool.ruff]
-builtins = ["diagnostics", "focal_neighbors", "moran_result"] # JupySQL result captures
+builtins = ["diagnostics", "focal_neighbors", "moran_result", "summary", "checks", "metrics", "lorenz", "coefficients", "registry", "model_details", "predictions", "dropped"]
 line-length = 110
 target-version = "py313"
 extend-exclude = ["artifacts", "validation"]
@@ -25,4 +15,4 @@ extend-exclude = ["artifacts", "validation"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.per-file-ignores]
-"*.ipynb" = ["E501"] # Visible SQL and result-derived prose retain readable lines
+"*.ipynb" = ["E501", "E402"]

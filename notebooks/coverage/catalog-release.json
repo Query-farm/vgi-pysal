@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "repository": "Query-farm/vgi-pysal",
+  "revision": "127af2ac9894c2fd5556ec7db9dfb63f69b62761",
+  "captured_at": "2026-11-15T01:48:27.146624+00:00",
+  "default_schema": "main",
+  "scope": "all_public_functions_and_tables",
+  "complete": true,
+  "objects": [
+    {
+      "schema": "main",
+      "name": "baltim",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "box_plot",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "columbus",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "drop_model",
+      "kind": "function",
+      "signatures": [
+        "table(VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "write"
+    },
+    {
+      "schema": "main",
+      "name": "equal_interval",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "fisher_jenks",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "fit",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "write"
+    },
+    {
+      "schema": "main",
+      "name": "geary",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "georgia",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "getis_ord_g",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "getis_ord_g_local",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, DOUBLE, VARCHAR, BOOLEAN, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, BIGINT, BIGINT) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "gini",
+      "kind": "function",
+      "signatures": [
+        "aggregate(DOUBLE) -> DOUBLE"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "head_tail_breaks",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "list_models",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "local_moran",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, BIGINT) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "mexico",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "model_info",
+      "kind": "function",
+      "signatures": [
+        "table(VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "moran",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, VARCHAR, DOUBLE, BIGINT, VARCHAR, BIGINT, VARCHAR, VARCHAR, BIGINT) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "natural_breaks",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "predict",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BLOB, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "quantiles",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "sids",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "spreg",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "std_mean",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "theil",
+      "kind": "function",
+      "signatures": [
+        "aggregate(DOUBLE) -> DOUBLE"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "us_states",
+      "kind": "function",
+      "signatures": [
+        "table() -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "weights",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    },
+    {
+      "schema": "main",
+      "name": "weights_summary",
+      "kind": "function",
+      "signatures": [
+        "table(TABLE, VARCHAR, VARCHAR, VARCHAR, DOUBLE, VARCHAR, VARCHAR, BIGINT, VARCHAR) -> None"
+      ],
+      "authentication": "none",
+      "access": "read"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "coverage/functions.json",
+      "sha256": "d6b55946d9a82e1dda97d1bde2fea0ba08f99e91d2d04379b48e6b757261874b",
+      "description": "Complete actual release runtime export or exact source identity evidence"
+    },
+    {
+      "path": "coverage/tables.json",
+      "sha256": "886a307d4f7059fec849bb0b491d0f78b7a085d870ed403011e72670f1037a86",
+      "description": "Complete actual release runtime export or exact source identity evidence"
+    },
+    {
+      "path": "coverage/views.json",
+      "sha256": "79cd1cc974c6787f681e0555f8c040ff2d8c49dfe50293ce9c82243f31e628bf",
+      "description": "Complete actual release runtime export or exact source identity evidence"
+    },
+    {
+      "path": "coverage/catalog-metadata.json",
+      "sha256": "56f80e85b2eac3a1957fe9ec78969f2c4a233ccb18adb4a2ace871e9d97fc1e2",
+      "description": "Complete actual release runtime export or exact source identity evidence"
+    },
+    {
+      "path": "coverage/current-source-review.json",
+      "sha256": "4ad0b05f6c2d3ca5447f1098196b00a74accebb152d713831399b7c7ed9bc959",
+      "description": "Complete actual release runtime export or exact source identity evidence"
+    }
+  ]
+}
