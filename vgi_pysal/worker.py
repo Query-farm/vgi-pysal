@@ -48,6 +48,32 @@ _FUNCTIONS: list[type] = [
     *REGRESSION_FUNCTIONS,
 ]
 
+# Long-form catalog docs (the catalog comment stays the one-line summary).
+CATALOG_DOC_LLM = (
+    "Run PySAL spatial statistics from SQL. Bundled example datasets (for instance columbus) return "
+    "attribute columns plus a WKB geom column. Analysis functions take a subquery of rows with a numeric "
+    "value column and a geom column, build spatial weights (queen, rook, k-nearest, distance band) from the "
+    "geometries, and return global or local statistics: Moran's I and Geary's C autocorrelation, local "
+    "LISA clusters, map classifications (quantiles, natural breaks, ...), inequality measures (Gini, Theil) "
+    "and spatial regression (OLS diagnostics, spatial lag and error models). Permutation-based p-values "
+    "depend on the permutation count and seed. Everything runs locally; no network access or API key is needed."
+)
+CATALOG_DOC_MD = (
+    "# PySAL spatial analysis for SQL\n\n"
+    "This worker exposes the [PySAL](https://pysal.org/) Python spatial analysis library as DuckDB table "
+    "functions. Load a bundled example dataset or pass any query with a numeric value and a geometry, and "
+    "the worker builds spatial weights from the geometries and returns the statistic as rows: global and "
+    "local spatial autocorrelation, map classification, inequality measures and spatial regression. "
+    "Permutation p-values depend on the permutation count and seed; all computation is local.\n\n"
+    "## Sources and references\n\n"
+    "- [PySAL](https://pysal.org/): the Python Spatial Analysis Library federation this worker wraps.\n"
+    "- [libpysal](https://pysal.org/libpysal/stable/): spatial weights and the bundled example datasets.\n"
+    "- [esda](https://pysal.org/esda/): Moran's I, Geary's C and local (LISA) autocorrelation statistics.\n"
+    "- [spreg](https://pysal.org/spreg/), [mapclassify](https://pysal.org/mapclassify/stable/) and "
+    "[inequality](https://pysal.org/inequality/): spatial regression, choropleth classification and "
+    "inequality measures."
+)
+
 _PYSAL_CATALOG = Catalog(
     name="pysal",
     default_schema="main",
@@ -62,6 +88,8 @@ _PYSAL_CATALOG = Catalog(
         "vgi.author": "Query.Farm",
         "vgi.copyright": "Copyright 2026 Query Farm LLC",
         "vgi.license": "MIT",
+        "vgi.doc_llm": CATALOG_DOC_LLM,
+        "vgi.doc_md": CATALOG_DOC_MD,
         # Analyst tasks for `vgi-lint --agent-check`; graders live in vgi-agent-tests.yaml.
         "vgi.agent_test_tasks": AGENT_TEST_TASKS,
     },
