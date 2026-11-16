@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
       - name: Install (from the lockfile)
-        run: uv sync --frozen --python 3.13
+        run: uv sync --frozen --python 3.14
       - name: ruff lint
         run: uv run --frozen ruff check .
       - name: ruff format
@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
       - name: Run unit tests
-        run: uv run --frozen --python 3.13 pytest tests/ -q
+        run: uv run --frozen --python 3.14 pytest tests/ -q
 
   integration:
     needs: resolve-haybarn
@@ -98,7 +98,7 @@ jobs:
       - uses: astral-sh/setup-uv@v7
 
       - name: Install the worker (from the lockfile)
-        run: uv sync --frozen --python 3.13
+        run: uv sync --frozen --python 3.14
 
       - name: Download haybarn-unittest
         run: |
@@ -155,7 +155,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - name: Sync
         run: uv sync --frozen
       - name: vgi-lint

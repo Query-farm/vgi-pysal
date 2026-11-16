@@ -137,7 +137,7 @@ class LocalDiskStore(ModelStore):
         for path in sorted(self.root.glob("*.json")):
             try:
                 out.append(SpatialModel.from_dict(json.loads(path.read_text())))
-            except (json.JSONDecodeError, OSError):
+            except json.JSONDecodeError, OSError:
                 continue
         return out
 

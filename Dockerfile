@@ -7,7 +7,7 @@
 # stack are all published; geopandas/shapely ship manylinux wheels, so there is
 # no system GEOS/GDAL to build) — no vendored checkouts, no pin rewriting.
 # syntax=docker/dockerfile:1
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 # Build metadata, wired from docker/metadata-action outputs in CI.
 ARG VERSION=0.0.0

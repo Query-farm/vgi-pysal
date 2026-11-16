@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.14"
 # dependencies = [
 #     "vgi-python[http,oauth]>=0.52.2,<0.53",
 #     "vgi-rpc[sentry]>=0.53.1",
@@ -12,14 +12,6 @@
 #     "shapely>=2.0",
 #     "geopandas>=1.0",
 # ]
-#
-# [tool.uv.sources]
-# vgi-python = { path = "../vgi-python" }
-# vgi-rpc = { path = "../vgi-rpc" }
-#
-# [tool.uv]
-# # Use the local vgi-rpc checkout even if it lags vgi-python's pinned lower bound.
-# override-dependencies = ["vgi-rpc>=0.53.1"]
 # ///
 """Stdio entry shim for the PySAL VGI worker.
 

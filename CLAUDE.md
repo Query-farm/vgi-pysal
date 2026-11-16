@@ -143,9 +143,9 @@ no `types.new_class` dance needed — see sharp edge #4).
    functions `np.random.seed(args.seed)` (default 12345) before computing, and the
    local stats also pass `seed=` to `Moran_Local`/`G_Local`. SQL tests rely on this
    for stable p-values.
-8. **`giddy` is not installable on Python 3.13** (its `quantecon` → `numba` chain
+8. **`giddy` is not installable on Python 3.14** (its `quantecon` → `numba` chain
    caps at <3.10). It's intentionally not a dependency. Spatial-dynamics functions
-   would need a different package or a 3.13-compatible giddy release.
+   would need a different package or a 3.14-compatible giddy release.
 9. **WKB only on the input side — no `require spatial` in the SQL tests.** The
    worker parses WKB itself with shapely, so datasets/weights/esda need only the
    `vgi` extension. The DuckDB spatial extension is only needed if *you* want to

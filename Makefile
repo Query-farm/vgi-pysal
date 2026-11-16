@@ -12,13 +12,14 @@
 VGI_PYTHON_SRC ?= $(HOME)/Development/vgi-python
 VGI_RPC_SRC    ?= $(HOME)/Development/vgi-rpc
 
-VGI_BUILD_DIR  ?= $(HOME)/Development/vgi/build/release
-TEST_RUNNER     = $(VGI_BUILD_DIR)/test/unittest
+# SQL tests run on the published haybarn-unittest with the community vgi extension
+# (ci/run-sqllogic.sh installs both; no local DuckDB/vgi builds).
+TEST_RUNNER     = ci/run-sqllogic.sh
 TEST_DIR        = .
 TEST_PATTERN    = test/sql/*
 
 # Worker paths (overridable)
-WORKER_STDIO   ?= uv run --python 3.13 pysal_worker.py
+WORKER_STDIO   ?= uv run --python 3.14 pysal_worker.py
 WORKER_HTTP    ?= http://localhost:8000
 WORKER_CLOUD   ?= https://$(FLY_APP).fly.dev
 HTTP_PORT      ?= 8000
@@ -32,12 +33,12 @@ TEST_MODELS_DIR ?= $(CURDIR)/.test-models
 .PHONY: test pytest lint typecheck check test-stdio test-http test-cloud smoke-test deploy venv
 
 venv:
-	uv venv --python 3.13
+	uv venv --python 3.14
 	uv pip install --python .venv \
 		"vgi-python[http,oauth] @ $(VGI_PYTHON_SRC)" \
 		"vgi-rpc[sentry] @ $(VGI_RPC_SRC)" \
 		"libpysal>=4.12" "esda>=2.5" "spreg>=1.6" "mapclassify>=2.6" \
-		"inequality>=1.0" "shapely>=2.0" "geopandas>=1.0" numpy pytest mypy pydoclint
+		"inequality>=1.0" "shapely>=2.0" "geopandas>=1.0" numpy pytest mypy
 
 # Static gates (config in pyproject.toml, adopted from vgi-python): ruff lint +
 # format, strict mypy, and the pydoclint docstring gate.
@@ -49,7 +50,7 @@ lint:
 
 typecheck:
 	.venv/bin/mypy $(PKG_SOURCES)
-	.venv/bin/pydoclint $(PKG_SOURCES)
+	uvx --python .venv/bin/python pydoclint==0.8.7 --config pyproject.toml $(PKG_SOURCES)
 
 check: lint typecheck pytest
 
