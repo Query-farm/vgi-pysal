@@ -1,8 +1,8 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "vgi-python[http,oauth]>=0.52.0",
-#     "vgi-rpc[sentry]",
+#     "vgi-python[http,oauth]>=0.52.2,<0.53",
+#     "vgi-rpc[sentry]>=0.53.1",
 #     "libpysal>=4.12",
 #     "esda>=2.5",
 #     "spreg>=1.6",
@@ -19,7 +19,7 @@
 #
 # [tool.uv]
 # # Use the local vgi-rpc checkout even if it lags vgi-python's pinned lower bound.
-# override-dependencies = ["vgi-rpc>=0.20.3"]
+# override-dependencies = ["vgi-rpc>=0.53.1"]
 # ///
 """HTTP entry shim for the PySAL VGI worker (used by the Fly.io container).
 

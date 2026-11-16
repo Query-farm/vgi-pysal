@@ -9,16 +9,15 @@
 # import smoke), then pushed by digest. A merge job assembles the per-arch digests
 # into one manifest under the release/edge tags and cosign-signs it (keyless).
 #
-# Triggers: a version tag push `vX.Y.Z` (-> :X.Y.Z, :X.Y, :latest), push to main
-# (-> :edge), manual, and workflow_call so other VGI workers can reuse this as a
-# standard baseline. Deliberately tag-driven, NOT release-driven, so an image can
+# Triggers: a version tag push `vX.Y.Z` (-> :X.Y.Z, :X.Y, :latest), manual,
+# and workflow_call so other VGI workers can reuse this as a standard baseline
+# (release tags only; :edge is no longer published). Deliberately tag-driven, NOT release-driven, so an image can
 # ship independently of a PyPI publish (which stays on the GitHub Release event in
 # publish.yml). Publishing a GitHub Release creates the tag, which fires this too.
 name: Publish image to ghcr.io
 
 on:
   push:
-    branches: [main]
     tags: ['v*.*.*']
   workflow_dispatch:
   workflow_call:
