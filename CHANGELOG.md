@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 (2026-11-25)
+
+- Image stdio smoke: keep the host-local storage-seal key on the shared state volume (`VGI_ATTACH_SECRET_KEY_FILE`), so the cold containers of one query agree on the key. The 0.2.0 image publish failed with `StoragePayloadError ... MAC check failed`. No worker code change.
+
 ## 0.2.0 (2026-11-25)
 
 - Speaks VGI protocol 3.4: require vgi-python `>=0.55.2,<0.56`; uv.lock re-locked. This release

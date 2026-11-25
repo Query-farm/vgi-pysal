@@ -147,7 +147,11 @@ jobs:
         if: matrix.arch == 'amd64'
         run: |
           docker volume rm vgi_pysal_state_ci >/dev/null 2>&1 || true
-          VGI_PYSAL_WORKER="docker run -i --rm -v vgi_pysal_state_ci:/data ${IMAGE}:citest-amd64 stdio" \
+          # Each ATTACH/RPC can land in a fresh cold container sharing the state
+          # volume; with no signing key vgi-python seals framework storage under the
+          # host-local key file, so keep that file on the shared volume (otherwise each
+          # container mints its own key: "_vgi/buffering_init ... MAC check failed").
+          VGI_PYSAL_WORKER="docker run -i --rm -v vgi_pysal_state_ci:/data -e VGI_ATTACH_SECRET_KEY_FILE=/data/state/attach-secret-options.key ${IMAGE}:citest-amd64 stdio" \
             ci/run-integration.sh
           docker volume rm vgi_pysal_state_ci >/dev/null 2>&1 || true
 

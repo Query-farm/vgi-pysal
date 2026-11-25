@@ -247,7 +247,7 @@ there is no pickle and no code-execution risk on load.
 
 The worker isn't on PyPI; [uv](https://docs.astral.sh/uv/) runs it straight from a tagged release on GitHub. `uvx` builds an isolated environment on the first ATTACH and reuses it afterwards:
 
-vgi-pysal 0.2.0 speaks VGI protocol 3.4, so it needs Haybarn 2.0.1 or newer (Haybarn 2.0.0 loads a 3.3 `vgi` extension that cannot attach it).
+vgi-pysal 0.2.1 speaks VGI protocol 3.4, so it needs Haybarn 2.0.1 or newer (Haybarn 2.0.0 loads a 3.3 `vgi` extension that cannot attach it).
 
 ```sql
 INSTALL vgi FROM community;
@@ -270,7 +270,7 @@ INSTALL vgi FROM query_farm; LOAD vgi FROM query_farm;`).
 - **Docker** (the image bundles the worker and its dependencies):
 
   ```sql
-  ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-pysal:0.2.0');
+  ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-pysal:0.2.1');
   ```
 
 - **From a local checkout** (`git clone https://github.com/Query-farm/vgi-pysal`), point `LOCATION` at `uv run --project /path/to/vgi-pysal vgi-pysal`.

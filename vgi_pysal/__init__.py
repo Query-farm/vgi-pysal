@@ -17,4 +17,4 @@ repo-root ``pysal_worker.py`` / ``serve.py`` are thin shims for ``uv run`` and t
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
