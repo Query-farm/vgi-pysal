@@ -247,18 +247,20 @@ there is no pickle and no code-execution risk on load.
 
 The worker isn't on PyPI; [uv](https://docs.astral.sh/uv/) runs it straight from a tagged release on GitHub. `uvx` builds an isolated environment on the first ATTACH and reuses it afterwards:
 
+vgi-pysal 0.2.0 speaks VGI protocol 3.4, so it needs Haybarn 2.0.1 or newer (Haybarn 2.0.0 loads a 3.3 `vgi` extension that cannot attach it).
+
 ```sql
 INSTALL vgi FROM community;
 LOAD vgi;
 
-ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'uvx --from git+https://github.com/Query-farm/vgi-pysal@v0.1.2 vgi-pysal');
+ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'uvx --from git+https://github.com/Query-farm/vgi-pysal@v0.2.0 vgi-pysal');
 
 -- Moran's I of neighbourhood crime on the built-in Columbus dataset.
 SELECT statistic AS morans_i, p_value
 FROM pysal.moran((SELECT crime AS y, geom FROM pysal.columbus()), w_type => 'queen');
 ```
 
-Change `@v0.1.2` to move to a newer release. On stock DuckDB 2.0, install the
+Change `@v0.2.0` to move to a newer release. On stock DuckDB 2.0, install the
 extension from the Query.Farm repository instead (`SET allow_extension_repositories = 'allowed';
 CREATE EXTENSION REPOSITORY IF NOT EXISTS query_farm WITH PREFIX 'https://duckdb-extensions.query.farm';
 INSTALL vgi FROM query_farm; LOAD vgi FROM query_farm;`).
@@ -268,7 +270,7 @@ INSTALL vgi FROM query_farm; LOAD vgi FROM query_farm;`).
 - **Docker** (the image bundles the worker and its dependencies):
 
   ```sql
-  ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-pysal:0.1.2');
+  ATTACH 'pysal' AS pysal (TYPE vgi, LOCATION 'docker://ghcr.io/query-farm/vgi-pysal:0.2.0');
   ```
 
 - **From a local checkout** (`git clone https://github.com/Query-farm/vgi-pysal`), point `LOCATION` at `uv run --project /path/to/vgi-pysal vgi-pysal`.

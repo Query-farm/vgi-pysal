@@ -1,8 +1,8 @@
 # /// script
 # requires-python = ">=3.14"
 # dependencies = [
-#     "vgi-python[http,oauth]>=0.52.2,<0.53",
-#     "vgi-rpc[sentry]>=0.53.1",
+#     "vgi-python[http,oauth]>=0.55.1,<0.56",
+#     "vgi-rpc[sentry]>=0.57.1",
 #     "libpysal>=4.12",
 #     "esda>=2.5",
 #     "spreg>=1.6",
